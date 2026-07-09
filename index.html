@@ -1,0 +1,3362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master Electrochemistry through immersive simulations, interactive labs, educational games, and quizzes.">
+    <title>Electrochem Interactive | Master Electrochemistry</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <style>
+        :root {
+            --bg-deep: #070814;
+            --bg-card: rgba(18, 20, 44, 0.7);
+            --bg-card-hover: rgba(25, 28, 59, 0.8);
+            --border-glow: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(0, 242, 254, 0.4);
+            
+            /* Theme Accent Colors */
+            --color-primary: #00f2fe; /* Electric Cyan */
+            --color-secondary: #9b51e0; /* Acid Purple */
+            --color-success: #00f2fe; /* Light cyan */
+            --color-accent-orange: #ff9f43; /* Warm gold/copper */
+            --color-danger: #ff4757;
+            --color-text-main: #f1f2f6;
+            --color-text-muted: #a4b0be;
+            --color-zinc: #a4b0be;
+            --color-copper: #ff7f50;
+            --color-gold: #ffd700;
+            --color-silver: #e0e0e0;
+            --color-lead: #708090;
+            --color-iron: #8fbc8f;
+            --color-magnesium: #b0c4de;
+            
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-glow: 0 8px 32px 0 rgba(0, 242, 254, 0.15);
+            --shadow-glow-purple: 0 8px 32px 0 rgba(155, 81, 224, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-primary) var(--bg-deep);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-deep);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 242, 254, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 242, 254, 0.6);
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--color-text-main);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(155, 81, 224, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.08) 0%, transparent 40%);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* App Container Layout */
+        .app-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: rgba(10, 11, 28, 0.85);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-glow);
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 3rem;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: #fff;
+        }
+
+        .logo-text {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #a4b0be);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-item {
+            width: 100%;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 18px;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 12px;
+            transition: var(--transition-smooth);
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-link svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.1), rgba(155, 81, 224, 0.05));
+            border-color: var(--border-active);
+            box-shadow: 0 4px 20px rgba(0, 242, 254, 0.05);
+            color: var(--color-primary);
+        }
+
+        .nav-link.active svg {
+            stroke: var(--color-primary);
+            filter: drop-shadow(0 0 5px var(--color-primary));
+        }
+
+        /* User progress in sidebar */
+        .sidebar-footer {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin-top: auto;
+        }
+
+        .sidebar-footer-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-text-muted);
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+            border-radius: 3px;
+            transition: width 0.8s ease;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Main Content Panel */
+        .main-content {
+            margin-left: 280px;
+            flex-grow: 1;
+            padding: 2.5rem 3.5rem;
+            min-height: 100vh;
+            width: calc(100% - 280px);
+        }
+
+        /* Section Routing View */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glassmorphic Card Styling */
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 24px;
+            padding: 2rem;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: var(--transition-smooth);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            background: var(--bg-card-hover);
+        }
+
+        /* Button Styling */
+        .btn {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 242, 254, 0.25);
+            filter: brightness(1.1);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--color-primary);
+            color: var(--color-primary);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 242, 254, 0.08);
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.15);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-glow);
+            color: var(--color-text-main);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: none;
+            transform: translateY(-2px);
+        }
+
+        /* Typography & Headings */
+        h1, h2, h3, h4 {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #fff, var(--color-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--color-text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        /* --- DASHBOARD SECTION --- */
+        .hero-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-text {
+            flex: 1;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title span {
+            background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.2rem;
+            color: var(--color-text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-graphic {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .atomic-model {
+            width: 320px;
+            height: 320px;
+            position: relative;
+        }
+
+        .atom-core {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, var(--color-primary) 0%, var(--color-secondary) 100%);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 35px var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        .orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 1px dashed rgba(0, 242, 254, 0.25);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .orbit-1 { width: 160px; height: 160px; animation: rotate 15s linear infinite; }
+        .orbit-2 { width: 260px; height: 260px; animation: rotate-reverse 25s linear infinite; }
+
+        .electron-node {
+            width: 14px;
+            height: 14px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            margin-left: -7px;
+            margin-top: -7px;
+            box-shadow: 0 0 15px var(--color-primary);
+        }
+
+        .orbit-2 .electron-node {
+            background: var(--color-secondary);
+            box-shadow: 0 0 15px var(--color-secondary);
+            top: unset;
+            bottom: 0;
+        }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes rotate-reverse {
+            from { transform: translate(-50%, -50%) rotate(360deg); }
+            to { transform: translate(-50%, -50%) rotate(0deg); }
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-primary);
+        }
+
+        .stat-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .stat-info h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .stat-info p {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Feature grid on Dashboard */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        @media(max-width: 1200px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .feature-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .feature-card h3 {
+            margin: 1rem 0 0.5rem 0;
+            font-size: 1.3rem;
+        }
+
+        .feature-card p {
+            color: var(--color-text-muted);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .feature-badge {
+            width: max-content;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--color-primary);
+        }
+
+        .feature-badge.purple {
+            background: rgba(155, 81, 224, 0.1);
+            color: var(--color-secondary);
+        }
+
+        .feature-badge.orange {
+            background: rgba(255, 159, 67, 0.1);
+            color: var(--color-accent-orange);
+        }
+
+        /* --- LEARN SECTION --- */
+        .learn-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        .lesson-menu {
+            position: sticky;
+            top: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .lesson-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-glow);
+            padding: 16px 20px;
+            border-radius: 16px;
+            text-align: left;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--color-text-main);
+        }
+
+        .lesson-btn:hover, .lesson-btn.active {
+            background: var(--bg-card-hover);
+            border-color: var(--color-primary);
+        }
+
+        .lesson-btn.active {
+            box-shadow: 0 4px 20px rgba(0, 242, 254, 0.05);
+        }
+
+        .lesson-btn h4 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .lesson-btn.completed .status-dot {
+            background: var(--color-primary);
+            box-shadow: 0 0 10px var(--color-primary);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .lesson-body {
+            min-height: 500px;
+        }
+
+        .lesson-content {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .lesson-content.active {
+            display: block;
+        }
+
+        .lesson-content h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-glow);
+            padding-bottom: 0.8rem;
+        }
+
+        .lesson-content p {
+            line-height: 1.7;
+            color: var(--color-text-muted);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        .sci-note {
+            background: rgba(155, 81, 224, 0.05);
+            border-left: 4px solid var(--color-secondary);
+            padding: 1.2rem 1.5rem;
+            border-radius: 0 16px 16px 0;
+            margin: 2rem 0;
+        }
+
+        .sci-note h5 {
+            color: var(--color-secondary);
+            font-size: 1rem;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .checkpoint-card {
+            background: rgba(0, 242, 254, 0.03);
+            border: 1px solid rgba(0, 242, 254, 0.15);
+            border-radius: 20px;
+            padding: 1.8rem;
+            margin-top: 3rem;
+        }
+
+        .checkpoint-card h4 {
+            color: var(--color-primary);
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkpoint-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .checkpoint-option {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-glow);
+            padding: 14px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-align: left;
+            color: var(--color-text-main);
+            font-weight: 500;
+        }
+
+        .checkpoint-option:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .checkpoint-option.correct {
+            border-color: var(--color-primary);
+            background: rgba(0, 242, 254, 0.08);
+        }
+
+        .checkpoint-option.incorrect {
+            border-color: var(--color-danger);
+            background: rgba(255, 71, 87, 0.08);
+        }
+
+        .checkpoint-feedback {
+            margin-top: 15px;
+            font-weight: 500;
+            display: none;
+        }
+
+        /* --- VIRTUAL LAB SECTION --- */
+        .lab-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6px;
+            border-radius: 14px;
+            border: 1px solid var(--border-glow);
+            width: fit-content;
+        }
+
+        .lab-tab-btn {
+            background: transparent;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 10px;
+            color: var(--color-text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .lab-tab-btn.active {
+            background: var(--bg-deep);
+            color: var(--color-primary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .lab-container {
+            display: none;
+        }
+
+        .lab-container.active {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2.5rem;
+        }
+
+        @media(max-width: 1100px) {
+            .lab-container.active {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Galvanic Simulation Layout */
+        .lab-canvas-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 520px;
+            background: radial-gradient(circle at center, rgba(18, 20, 44, 0.4) 0%, rgba(7, 8, 20, 0.8) 100%);
+            position: relative;
+        }
+
+        .voltmeter-display {
+            background: #000;
+            border: 2px solid var(--color-primary);
+            border-radius: 12px;
+            padding: 8px 24px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+            margin-bottom: 2rem;
+            z-index: 10;
+        }
+
+        /* SVG galvanic elements styling */
+        .svg-wire {
+            stroke: #a4b0be;
+            stroke-width: 4;
+            fill: none;
+        }
+
+        .electron {
+            fill: var(--color-primary);
+            filter: drop-shadow(0 0 4px var(--color-primary));
+        }
+
+        .ion-bullet {
+            border-radius: 50%;
+            position: absolute;
+            pointer-events: none;
+            width: 8px;
+            height: 8px;
+            filter: blur(1px);
+        }
+
+        .ion-anion {
+            background-color: var(--color-secondary);
+            box-shadow: 0 0 8px var(--color-secondary);
+        }
+
+        .ion-cation {
+            background-color: var(--color-primary);
+            box-shadow: 0 0 8px var(--color-primary);
+        }
+
+        .beaker {
+            fill: rgba(255, 255, 255, 0.1);
+            stroke: rgba(255, 255, 255, 0.3);
+            stroke-width: 3;
+        }
+
+        .solution {
+            fill-opacity: 0.65;
+            transition: fill 0.8s ease;
+        }
+
+        .electrode {
+            stroke-width: 2;
+            transition: var(--transition-smooth);
+        }
+
+        /* Lab Controls Card */
+        .lab-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-group label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text-muted);
+            font-weight: 600;
+        }
+
+        .select-input, .range-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glow);
+            padding: 12px;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 500;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .select-input:focus {
+            border-color: var(--color-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .range-value {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--color-primary);
+            font-size: 0.95rem;
+        }
+
+        .cell-info-pane {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+        }
+
+        .cell-info-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .cell-info-line span:first-child {
+            color: var(--color-text-muted);
+        }
+
+        .cell-info-line span:last-child {
+            font-weight: 600;
+        }
+
+        /* --- ELECTROPLATING LAB --- */
+        .electroplating-lab-canvas {
+            width: 100%;
+            height: 380px;
+            position: relative;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .electroplating-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .bubbling-particle {
+            position: absolute;
+            bottom: 30%;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: bubbleUp 2s infinite ease-in;
+            pointer-events: none;
+        }
+
+        @keyframes bubbleUp {
+            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-120px) scale(1.2); opacity: 0; }
+        }
+
+        /* Plating target coating effect */
+        .plated-coating {
+            transition: fill 0.8s ease;
+        }
+
+        /* Live readouts for Electroplating */
+        .readout-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .readout-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .readout-card p {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .readout-card h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            color: var(--color-primary);
+        }
+
+        /* --- GAMES SECTION --- */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .game-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .game-card-main {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .game-screen {
+            background: rgba(10, 11, 28, 0.9);
+            border: 1px solid var(--border-glow);
+            border-radius: 24px;
+            padding: 2.5rem;
+            min-height: 520px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .game-hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            font-size: 0.95rem;
+        }
+
+        .game-hud-stat {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border-glow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .game-hud-stat span {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        /* Voltage Architect UI */
+        .architect-level-desc {
+            text-align: center;
+            margin-top: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .target-box {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.1), rgba(155, 81, 224, 0.05));
+            border: 1px solid var(--border-active);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .target-box p {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .target-box h2 {
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0,242,254,0.4);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .architect-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .architect-potential-meter {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .architect-potential-meter span {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--color-secondary);
+        }
+
+        /* Redox Equalizer UI */
+        .equalizer-formula {
+            font-size: 1.8rem;
+            text-align: center;
+            margin: 3rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .equalizer-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .equalizer-choice-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glow);
+            padding: 18px;
+            border-radius: 16px;
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .equalizer-choice-btn:hover {
+            background: rgba(0, 242, 254, 0.05);
+            border-color: var(--color-primary);
+        }
+
+        .game-timer-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            overflow: hidden;
+            border-radius: 0 0 24px 24px;
+        }
+
+        .game-timer-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+            transition: width 1s linear;
+        }
+
+        /* --- QUIZ SECTION --- */
+        .quiz-container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .quiz-hud {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        .quiz-hud span {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .quiz-progress-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            margin-bottom: 2.5rem;
+            overflow: hidden;
+        }
+
+        .quiz-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+            border-radius: 4px;
+            transition: var(--transition-smooth);
+        }
+
+        .quiz-question-box h3 {
+            font-size: 1.5rem;
+            line-height: 1.5;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-option-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-glow);
+            padding: 16px 24px;
+            border-radius: 16px;
+            color: var(--color-text-main);
+            font-size: 1.05rem;
+            text-align: left;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .quiz-option-btn:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .quiz-option-btn.correct {
+            border-color: var(--color-primary);
+            background: rgba(0, 242, 254, 0.08);
+            color: #fff;
+        }
+
+        .quiz-option-btn.incorrect {
+            border-color: var(--color-danger);
+            background: rgba(255, 71, 87, 0.08);
+            color: #fff;
+        }
+
+        .quiz-explanation {
+            margin-top: 2rem;
+            padding: 1.2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            border: 1px solid var(--border-glow);
+            display: none;
+        }
+
+        .quiz-explanation h5 {
+            color: var(--color-primary);
+            margin-bottom: 6px;
+        }
+
+        /* Certificate Styling */
+        .certificate-panel {
+            text-align: center;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .certificate-canvas-container {
+            background: linear-gradient(135deg, #11132e, #070814);
+            border: 8px double rgba(0, 242, 254, 0.4);
+            padding: 3rem 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            position: relative;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .cert-badge {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem auto;
+            background: radial-gradient(circle, var(--color-primary) 0%, var(--color-secondary) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+        }
+
+        .cert-badge svg {
+            width: 40px;
+            height: 40px;
+            fill: #fff;
+        }
+
+        .cert-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #ffd700, #ffa500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .cert-subtitle {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+        }
+
+        .cert-name {
+            font-size: 2.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: #fff;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            width: max-content;
+            margin: 0 auto 2rem auto;
+            padding: 0 20px 8px 20px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .cert-text {
+            color: var(--color-text-muted);
+            line-height: 1.6;
+            max-width: 480px;
+            margin: 0 auto 2.5rem auto;
+        }
+
+        .cert-footer-info {
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .cert-sig {
+            font-family: 'Outfit', sans-serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: #fff;
+            margin-top: 8px;
+        }
+
+        /* Utility Helpers */
+        .flex-row-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .mt-4 { margin-top: 1rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mr-2 { margin-right: 0.5rem; }
+
+        /* Responsive design Adjustments */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1.5rem;
+            }
+            .logo-area {
+                margin-bottom: 1.5rem;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 1.5rem;
+            }
+            .hero-banner {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+            .atomic-model {
+                width: 200px;
+                height: 200px;
+            }
+            .orbit-1 { width: 100px; height: 100px; }
+            .orbit-2 { width: 160px; height: 160px; }
+            .hero-title { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- SIDEBAR NAVIGATION -->
+        <aside class="sidebar">
+            <div>
+                <div class="logo-area">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2L2 22h20L12 2zm0 3.8L18.5 19H5.5L12 5.8zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z" />
+                        </svg>
+                    </div>
+                    <span class="logo-text">ElectroLab</span>
+                </div>
+                
+                <nav>
+                    <ul class="nav-links">
+                        <li class="nav-item">
+                            <a class="nav-link active" onclick="switchTab('dashboard')">
+                                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" onclick="switchTab('learn')">
+                                <svg viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                                <span>Learn Chemistry</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" onclick="switchTab('lab')">
+                                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14H6v-2h4v2zm0-4H6v-2h4v2zm0-4H6V7h4v2zm8 8h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V7h4v2z"/></svg>
+                                <span>Virtual Labs</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" onclick="switchTab('games')">
+                                <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                                <span>Educational Games</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" onclick="switchTab('quiz')">
+                                <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4m-2 8a8 8 0 11-16 0 8 8 0 0116 0z"/></svg>
+                                <span>Ultimate Quiz</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            
+            <div class="sidebar-footer">
+                <p class="sidebar-footer-title">Overall Mastery</p>
+                <div class="progress-bar-container">
+                    <div id="mastery-progress-bar" class="progress-bar-fill"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="mastery-text">0% Done</span>
+                    <span>⚡ Expert</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+            
+            <!-- ================= DASHBOARD SECTION ================= -->
+            <section id="dashboard-section" class="content-section active">
+                <div class="hero-banner">
+                    <div class="hero-text">
+                        <h1 class="hero-title">Unlock the Power of <span>Electrochemistry</span></h1>
+                        <p class="hero-desc">Dive deep into the flow of electrons. Build galvanic batteries, coat objects with pure gold, balance complex redox reactions, and master chemical energy through interactive playgrounds.</p>
+                        <button class="btn" onclick="switchTab('learn')">
+                            <span>Get Started</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+                    
+                    <div class="hero-graphic">
+                        <div class="atomic-model">
+                            <div class="orbit orbit-1">
+                                <div class="electron-node"></div>
+                            </div>
+                            <div class="orbit orbit-2">
+                                <div class="electron-node"></div>
+                            </div>
+                            <div class="atom-core">e⁻</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Counters -->
+                <div class="stats-grid">
+                    <div class="glass-card stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-lessons">0/4</h3>
+                            <p>Lessons Completed</p>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24"><path d="M19.48 9.44l-7.79-7.79a1.5 1.5 0 00-2.12 0l-7.79 7.79a1.5 1.5 0 000 2.12l7.79 7.79a1.5 1.5 0 002.12 0l7.79-7.79a1.5 1.5 0 000-2.12zM12 4.41L18.59 11 12 17.59 5.41 11 12 4.41z"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-labs">0</h3>
+                            <p>Simulations Run</p>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2z"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-games">0</h3>
+                            <p>Games Played</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured Learning paths -->
+                <div class="features-grid">
+                    <div class="glass-card feature-card">
+                        <span class="feature-badge">Learn</span>
+                        <h3>Bite-Sized Lessons</h3>
+                        <p>Discover standard reduction potentials, the structure of electrochemical cells, Faraday's laws of electrolysis, and the Nernst concentration equation.</p>
+                        <button class="btn btn-secondary mt-auto" onclick="switchTab('learn')">Start Learning</button>
+                    </div>
+
+                    <div class="glass-card feature-card">
+                        <span class="feature-badge purple">Interact</span>
+                        <h3>Virtual Laboratories</h3>
+                        <p>Construct customized chemical batteries using different electrodes to measure cell voltages, or perform interactive electroplating experiments.</p>
+                        <button class="btn btn-secondary mt-auto" onclick="switchTab('lab')">Open Sandbox</button>
+                    </div>
+
+                    <div class="glass-card feature-card">
+                        <span class="feature-badge orange">Play</span>
+                        <h3>Interactive Games</h3>
+                        <p>Synthesize specific voltage targets as a Cell Architect or test your rapid charge balancing skills in the Redox Equalizer.</p>
+                        <button class="btn btn-secondary mt-auto" onclick="switchTab('games')">Launch Games</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= LEARN SECTION ================= -->
+            <section id="learn-section" class="content-section">
+                <h1>Interactive Chemistry Study</h1>
+                <p class="subtitle">Complete these 4 foundational units to unlock the ultimate mastery certificate.</p>
+                
+                <div class="learn-layout">
+                    <!-- Lesson Selector Sidebar -->
+                    <div class="lesson-menu">
+                        <button class="lesson-btn active" id="lesson-btn-1" onclick="selectLesson(1)">
+                            <div>
+                                <small style="color: var(--color-primary);">Unit 1</small>
+                                <h4>Redox Basics</h4>
+                            </div>
+                            <div class="status-dot"></div>
+                        </button>
+                        <button class="lesson-btn" id="lesson-btn-2" onclick="selectLesson(2)">
+                            <div>
+                                <small style="color: var(--color-primary);">Unit 2</small>
+                                <h4>Galvanic Cells</h4>
+                            </div>
+                            <div class="status-dot"></div>
+                        </button>
+                        <button class="lesson-btn" id="lesson-btn-3" onclick="selectLesson(3)">
+                            <div>
+                                <small style="color: var(--color-primary);">Unit 3</small>
+                                <h4>Electrolysis & Plating</h4>
+                            </div>
+                            <div class="status-dot"></div>
+                        </button>
+                        <button class="lesson-btn" id="lesson-btn-4" onclick="selectLesson(4)">
+                            <div>
+                                <small style="color: var(--color-primary);">Unit 4</small>
+                                <h4>Nernst Equation</h4>
+                            </div>
+                            <div class="status-dot"></div>
+                        </button>
+                    </div>
+
+                    <!-- Lesson Content Pane -->
+                    <div class="glass-card lesson-body">
+                        
+                        <!-- UNIT 1 -->
+                        <div class="lesson-content active" id="lesson-content-1">
+                            <h2>Unit 1: The Core of Redox Reactions</h2>
+                            <p>At its heart, electrochemistry is the study of chemical reactions that involve the transfer of electrons. These are called <strong>Redox</strong> (reduction-oxidation) reactions.</p>
+                            
+                            <div class="sci-note">
+                                <h5>Mnemonic Device: OIL RIG</h5>
+                                <p><strong>O</strong>xidation <strong>I</strong>s <strong>L</strong>oss of electrons.<br><strong>R</strong>eduction <strong>I</strong>s <strong>G</strong>ain of electrons.</p>
+                            </div>
+
+                            <p>To identify if a redox reaction is taking place, chemists assign <strong>Oxidation States</strong> (or numbers) to every atom in a compound. An oxidation state is the hypothetical charge an atom would have if all bonds to different atoms were 100% ionic.</p>
+                            
+                            <h3>Fundamental Rules for Oxidation Numbers:</h3>
+                            <p style="margin-left: 20px;">1. Elements in their elemental state (e.g., O₂, Fe, Na) are always <strong>0</strong>.<br>
+                            2. Monatomic ions (e.g., Na⁺, Cl⁻) match their ionic charge (+1, -1).<br>
+                            3. Oxygen in compounds is usually <strong>-2</strong> (except in peroxides where it is -1).<br>
+                            4. Hydrogen is <strong>+1</strong> when bonded to nonmetals and <strong>-1</strong> when bonded to metals.</p>
+                            
+                            <!-- Checkpoint 1 -->
+                            <div class="checkpoint-card" id="checkpoint-1">
+                                <h4>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4m-2 8a8 8 0 11-16 0 8 8 0 0116 0z"/></svg>
+                                    Interactive Checkpoint
+                                </h4>
+                                <p>What is the oxidation state of Manganese (Mn) in the permanganate ion (MnO₄⁻)?</p>
+                                <div class="checkpoint-options">
+                                    <button class="checkpoint-option" onclick="answerCheckpoint(1, '+5', false, 'Keep in mind that the sum of oxidation numbers must equal the charge of the ion (-1). Oxygen is -2.')">+5</button>
+                                    <button class="checkpoint-option" onclick="answerCheckpoint(1, '+7', true, 'Correct! Mn + 4(-2) = -1. Therefore, Mn - 8 = -1, which means Mn = +7.')">+7</button>
+                                    <button class="checkpoint-option" onclick="answerCheckpoint(1, '+6', false, 'Close! Try writing the algebraic equation: Mn + 4(O) = -1.')">+6</button>
+                                </div>
+                                <div class="checkpoint-feedback" id="feedback-1"></div>
+                            </div>
+                        </div>
+
+                        <!-- UNIT 2 -->
+                        <div class="lesson-content" id="lesson-content-2">
+                            <h2>Unit 2: Galvanic (Voltaic) Cells</h2>
+                            <p>A <strong>Galvanic Cell</strong> uses a spontaneous chemical reaction to generate electrical energy. It splits a redox reaction into two separate chambers (half-cells) connected by a wire and a salt bridge.</p>
+                            
+                            <div class="sci-note">
+                                <h5>AN OX and RED CAT</h5>
+                                <p><strong>An</strong>ode is the site of <strong>Ox</strong>idation.<br><strong>Red</strong>uction occurs at the <strong>Cat</strong>hode.</p>
+                            </div>
+
+                            <p>Electrons flow spontaneously through the external circuit from the <strong>Anode (-)</strong> to the <strong>Cathode (+)</strong>. This flow occurs because one metal has a greater tendency to lose electrons (higher oxidation potential) than the other.</p>
+                            
+                            <h3>Standard Cell Potential ($E^0_{cell}$)</h3>
+                            <p>The standard cell potential is the voltage generated by a cell under standard conditions (1 M concentrations, 1 atm pressure, 25°C). It is calculated as:</p>
+                            <p style="font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; color: var(--color-primary); text-align: center; margin: 15px 0;">E⁰_cell = E⁰_cathode - E⁰_anode</p>
+                            <p>A positive $E^0_{cell}$ indicates the reaction is spontaneous (Galvanic). A salt bridge containing inert ions (like K⁺ and NO₃⁻) is vital to balance accumulating charge as reactions progress.</p>
+                            
+                            <!-- Checkpoint 2 -->
+                            <div class="checkpoint-card" id="checkpoint-2">
+                                <h4>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4m-2 8a8 8 0 11-16 0 8 8 0 0116 0z"/></svg>
+                                    Interactive Checkpoint
+                                </h4>
+                                <p>If a Galvanic cell is constructed using Zinc (Zn²⁺/Zn, E⁰ = -0.76 V) and Copper (Cu²⁺/Cu, E⁰ = +0.34 V), what is the cathode metal and standard cell potential?</p>
+                                <div class="checkpoint-options">
+                                    <button class="checkpoint-option" onclick="answerCheckpoint(2, 'Zn, 0.42 V', false, 'The cathode must have the higher (more positive) reduction potential. Cu is +0.34 V while Zn is -0.76 V.')">Zinc, E⁰ = 0.42 V</button>
+                                    <button class="checkpoint-option" onclick="answerCheckpoint(2, 'Cu, 1.10 V', true, 'Correct! Copper is the cathode because it has the higher potential. E⁰_cell = 0.34V - (-0.76V) = +1.10V.')">Copper, E⁰ = 1.10 V</button>
+                                    <button class="checkpoint-option" onclick="answerCheckpoint(2, 'Cu, -0.42 V', false, 'Remember, cell potential for a spontaneous Galvanic cell must be positive. E⁰_cell = E⁰_cathode - E⁰_anode.')">Copper, E⁰ = -0.42 V</button>
+                                </div>
+                                <div class="checkpoint-feedback" id="feedback-2"></div>
+                            </div>
+                        </div>
+
+                        <!-- UNIT 3 -->
+                        <div class="lesson-content" id="lesson-content-3">
+                            <h2>Unit 3: Electrolysis & Electroplating</h2>
+                            <p>An <strong>Electrolytic Cell</strong> uses electrical energy from an external power supply to drive a non-spontaneous chemical reaction. Unlike Galvanic cells, the cell potential is negative ($E^0_{cell} < 0$).</p>
+                            
+                            <p>A classic industrial application is <strong>Electroplating</strong>, where a thin layer of a precious metal (like Gold, Silver, or Copper) is deposited onto another metal object (like a key or spoon) using electrolysis.</p>
+                            
+                            <div class="sci-note">
+                                <h5>Faraday's First Law of Electrolysis</h5>
+                                <p>The mass ($m$) of a substance deposited on an electrode is directly proportional to the total electrical charge ($Q = I \times t$) passed through the solution.</p>
+                            </div>
+
+                            <h3>Quantifying Plating: Faraday's Equation</h3>
+                            <p>To calculate the mass of metal deposited, we use:</p>
+                            <p style="font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; color: var(--color-primary); text-align: center; margin: 15px 0;">m = (I &bull; t &bull; M) / (z &bull; F)</p>
+                            <p>Where:<br>
+                            • <strong>I</strong> = Current in Amperes (A)<br>
+                            • <strong>t</strong> = Time in seconds (s)<br>
+                            • <strong>M</strong> = Molar Mass of the metal (g/mol)<br>
+                            • <strong>z</strong> = Number of electrons transferred per metal ion (valence)<br>
+                            • <strong>F</strong> = Faraday's Constant (96,485 Coulombs/mol e⁻)</p>
+                            
+                            <!-- Checkpoint 3 -->
+                            <div class="checkpoint-card" id="checkpoint-3">
+                                <h4>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4m-2 8a8 8 0 11-16 0 8 8 0 0116 0z"/></svg>
+                                    Interactive Checkpoint
+                                </h4>
+                                <p>During electroplating, where is the object to be plated attached?</p>
+                                <div class="checkpoint-options">
+                                    <button class="checkpoint-option" onclick="answerCheckpoint(3, 'Cathode', true, 'Correct! Metal ions (which are positive cations like Ag⁺ or Cu²⁺) must be reduced (gain electrons) to form solid metal on the object. Reduction happens at the cathode, which is connected to the negative terminal of the power supply.')">The Cathode (negative terminal)</button>
+                                    <button class="checkpoint-option" onclick="answerCheckpoint(3, 'Anode', false, 'Cations in solution have a positive charge. They are attracted to the negative electrode to pick up electrons and deposit as solid metal.')">The Anode (positive terminal)</button>
+                                    <button class="checkpoint-option" onclick="answerCheckpoint(3, 'Salt bridge', false, 'The salt bridge only functions to maintain electrical neutrality in galvanic processes; electroplating utilizes a direct current power source connected to electrodes in a single bath.')">The Salt Bridge</button>
+                                </div>
+                                <div class="checkpoint-feedback" id="feedback-3"></div>
+                            </div>
+                        </div>
+
+                        <!-- UNIT 4 -->
+                        <div class="lesson-content" id="lesson-content-4">
+                            <h2>Unit 4: The Nernst Equation</h2>
+                            <p>So far, we have only looked at standard cell potentials. However, cell potentials change when we alter concentrations or temperature. To calculate cell potentials under non-standard conditions, we use the <strong>Nernst Equation</strong>.</p>
+                            
+                            <p>Named after Walther Nernst, this equation connects thermodynamics to electrochemistry:</p>
+                            <p style="font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; color: var(--color-primary); text-align: center; margin: 15px 0;">E = E⁰ - (R &bull; T) / (n &bull; F) &bull; ln(Q)</p>
+                            
+                            <p>At 298.15 K (25°C), we can convert to base-10 log and simplify the constants:</p>
+                            <p style="font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; color: var(--color-primary); text-align: center; margin: 15px 0;">E = E⁰ - (0.0592 / n) &bull; log₁₀(Q)</p>
+                            
+                            <p>Where:<br>
+                            • <strong>E</strong> = Cell Potential under non-standard conditions<br>
+                            • <strong>E⁰</strong> = Standard Cell Potential<br>
+                            • <strong>n</strong> = Moles of electrons transferred<br>
+                            • <strong>Q</strong> = Reaction Quotient ($[\text{Products}] / [\text{Reactants}]$)</p>
+                            
+                            <div class="sci-note">
+                                <h5>Concentration Cells</h5>
+                                <p>A cell can be constructed using the same metal for both electrodes, differing only in concentrations. E.g., Ag (0.01M) and Ag (1.0M). The potential is driven entirely by entropy: ions move to equalize concentration.</p>
+                            </div>
+                            
+                            <!-- Checkpoint 4 -->
+                            <div class="checkpoint-card" id="checkpoint-4">
+                                <h4>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4m-2 8a8 8 0 11-16 0 8 8 0 0116 0z"/></svg>
+                                    Interactive Checkpoint
+                                </h4>
+                                <p>For the Zinc/Copper Galvanic cell (E⁰ = 1.10 V), what happens to the overall cell voltage if we increase the Zn²⁺ (product) concentration relative to Cu²⁺ (reactant)?</p>
+                                <div class="checkpoint-options">
+                                    <button class="checkpoint-option" onclick="answerCheckpoint(4, 'Increases', false, 'Look at the Nernst Equation. If Zn²⁺ is a product, it goes on top of the quotient Q. A higher Q increases the value subtracted from E⁰.')">It increases</button>
+                                    <button class="checkpoint-option" onclick="answerCheckpoint(4, 'Decreases', true, 'Correct! By increasing Zn²⁺ concentration (products), Le Chatelier\'s principle indicates the forward drive is reduced. Q increases, making the term subtracted larger, reducing E.')">It decreases</button>
+                                    <button class="checkpoint-option" onclick="answerCheckpoint(4, 'Constant', false, 'Concentration directly affects cell potential. The cell potential only equals E⁰ when concentrations are exactly 1.0 M.')">It remains constant</button>
+                                </div>
+                                <div class="checkpoint-feedback" id="feedback-4"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= VIRTUAL LAB SECTION ================= -->
+            <section id="lab-section" class="content-section">
+                <h1>Virtual Laboratory Playground</h1>
+                <p class="subtitle">Conduct safe, interactive electrochemical experiments in real time.</p>
+                
+                <div class="lab-selector">
+                    <button class="lab-tab-btn active" id="lab-btn-galvanic" onclick="switchLab('galvanic')">Galvanic Cell Simulator</button>
+                    <button class="lab-tab-btn" id="lab-btn-plating" onclick="switchLab('plating')">Electroplating Station</button>
+                </div>
+
+                <!-- Simulation 1: Galvanic Cell -->
+                <div class="lab-container active" id="lab-galvanic">
+                    
+                    <div class="glass-card lab-canvas-card">
+                        <!-- Digital Voltmeter -->
+                        <div class="voltmeter-display">
+                            <span id="voltmeter-val">0.00</span> V
+                        </div>
+                        
+                        <!-- Cell Graphic Canvas -->
+                        <svg viewBox="0 0 700 350" width="100%" height="320">
+                            <!-- Left Beaker -->
+                            <rect x="70" y="160" width="160" height="150" rx="10" class="beaker" />
+                            <rect x="73" y="190" width="154" height="117" id="left-solution" class="solution" fill="rgba(100,100,250,0.15)" />
+                            <text x="150" y="290" text-anchor="middle" font-size="12" fill="#fff" font-weight="600" id="left-solution-label">Zn²⁺ (1.0 M)</text>
+                            
+                            <!-- Right Beaker -->
+                            <rect x="470" y="160" width="160" height="150" rx="10" class="beaker" />
+                            <rect x="473" y="190" width="154" height="117" id="right-solution" class="solution" fill="rgba(255,100,50,0.15)" />
+                            <text x="550" y="290" text-anchor="middle" font-size="12" fill="#fff" font-weight="600" id="right-solution-label">Cu²⁺ (1.0 M)</text>
+                            
+                            <!-- Salt Bridge -->
+                            <path d="M 200 200 L 200 130 A 20 20 0 0 1 240 110 L 460 110 A 20 20 0 0 1 500 130 L 500 200" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="20" stroke-linecap="round" />
+                            <path d="M 200 200 L 200 130 A 20 20 0 0 1 240 110 L 460 110 A 20 20 0 0 1 500 130 L 500 200" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="12" stroke-linecap="round" />
+                            <text x="350" y="105" text-anchor="middle" font-size="12" fill="#000" font-weight="bold">Salt Bridge (KNO₃)</text>
+                            
+                            <!-- Left Electrode -->
+                            <rect x="130" y="110" width="40" height="130" id="left-electrode" class="electrode" fill="#b0c4de" stroke="rgba(255,255,255,0.4)"/>
+                            <text x="150" y="95" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold" id="left-electrode-label">Zn</text>
+                            
+                            <!-- Right Electrode -->
+                            <rect x="530" y="110" width="40" height="130" id="right-electrode" class="electrode" fill="#ff7f50" stroke="rgba(255,255,255,0.4)"/>
+                            <text x="550" y="95" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold" id="right-electrode-label">Cu</text>
+                            
+                            <!-- Voltmeter box & Wires -->
+                            <!-- Wire Anode -> Meter -->
+                            <path d="M 150 110 L 150 50 L 310 50" class="svg-wire" id="wire-left"/>
+                            <!-- Wire Cathode -> Meter -->
+                            <path d="M 550 110 L 550 50 L 390 50" class="svg-wire" id="wire-right"/>
+                            <!-- Meter Box representation -->
+                            <rect x="310" y="30" width="80" height="40" fill="#20223f" stroke="#00f2fe" stroke-width="2" rx="5" />
+                            <circle cx="350" cy="50" r="10" fill="#070814" stroke="#00f2fe" stroke-width="1" />
+                            
+                            <!-- Animated Electron flow nodes (hidden by default) -->
+                            <circle cx="0" cy="0" r="4" class="electron" id="e1" style="display:none;"/>
+                            <circle cx="0" cy="0" r="4" class="electron" id="e2" style="display:none;"/>
+                            <circle cx="0" cy="0" r="4" class="electron" id="e3" style="display:none;"/>
+                        </svg>
+
+                        <!-- Cell Half-Reactions Live Readout -->
+                        <div class="flex-row-center" style="width: 100%; margin-top: 1rem; gap: 2rem;">
+                            <div style="text-align: center;">
+                                <div style="color: var(--color-danger); font-weight: bold; font-size: 0.9rem; text-transform: uppercase;">Anode Oxidation (Loss)</div>
+                                <div id="anode-reaction-text" style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; margin-top: 5px;">Zn → Zn²⁺ + 2e⁻</div>
+                            </div>
+                            <div style="border-left: 1px solid var(--border-glow); height: 40px;"></div>
+                            <div style="text-align: center;">
+                                <div style="color: var(--color-primary); font-weight: bold; font-size: 0.9rem; text-transform: uppercase;">Cathode Reduction (Gain)</div>
+                                <div id="cathode-reaction-text" style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; margin-top: 5px;">Cu²⁺ + 2e⁻ → Cu</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lab Settings Sidebar -->
+                    <div class="lab-controls glass-card">
+                        <h3>Cell Settings</h3>
+                        
+                        <div class="control-group">
+                            <label for="galvanic-left">Left Chamber Metal</label>
+                            <select id="galvanic-left" class="select-input" onchange="runGalvanicSimulation()">
+                                <option value="Mg">Magnesium (Mg²⁺/Mg, -2.37 V)</option>
+                                <option value="Zn" selected>Zinc (Zn²⁺/Zn, -0.76 V)</option>
+                                <option value="Fe">Iron (Fe²⁺/Fe, -0.44 V)</option>
+                                <option value="Pb">Lead (Pb²⁺/Pb, -0.13 V)</option>
+                                <option value="Cu">Copper (Cu²⁺/Cu, +0.34 V)</option>
+                                <option value="Ag">Silver (Ag⁺/Ag, +0.80 V)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="galvanic-right">Right Chamber Metal</label>
+                            <select id="galvanic-right" class="select-input" onchange="runGalvanicSimulation()">
+                                <option value="Mg">Magnesium (Mg²⁺/Mg, -2.37 V)</option>
+                                <option value="Zn">Zinc (Zn²⁺/Zn, -0.76 V)</option>
+                                <option value="Fe">Iron (Fe²⁺/Fe, -0.44 V)</option>
+                                <option value="Pb">Lead (Pb²⁺/Pb, -0.13 V)</option>
+                                <option value="Cu" selected>Copper (Cu²⁺/Cu, +0.34 V)</option>
+                                <option value="Ag">Silver (Ag⁺/Ag, +0.80 V)</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group">
+                            <div style="display: flex; justify-content: space-between;">
+                                <label for="conc-left">Left Concentration</label>
+                                <span class="range-value" id="conc-left-val">1.0 M</span>
+                            </div>
+                            <input type="range" id="conc-left" min="0.01" max="2" step="0.01" value="1.0" class="select-input" style="padding: 0;" oninput="updateConcentrations()">
+                        </div>
+
+                        <div class="control-group">
+                            <div style="display: flex; justify-content: space-between;">
+                                <label for="conc-right">Right Concentration</label>
+                                <span class="range-value" id="conc-right-val">1.0 M</span>
+                            </div>
+                            <input type="range" id="conc-right" min="0.01" max="2" step="0.01" value="1.0" class="select-input" style="padding: 0;" oninput="updateConcentrations()">
+                        </div>
+
+                        <div class="control-group">
+                            <div style="display: flex; justify-content: space-between;">
+                                <label for="temp-slider">Temperature</label>
+                                <span class="range-value" id="temp-val">25 °C</span>
+                            </div>
+                            <input type="range" id="temp-slider" min="0" max="100" step="1" value="25" class="select-input" style="padding: 0;" oninput="updateConcentrations()">
+                        </div>
+
+                        <div class="cell-info-pane">
+                            <div class="cell-info-line">
+                                <span>Spontaneous Flow:</span>
+                                <span id="info-spont" style="color: var(--color-primary);">Yes</span>
+                            </div>
+                            <div class="cell-info-line">
+                                <span>Cell Notation:</span>
+                                <span id="info-notation" style="font-family: 'JetBrains Mono', monospace;">Zn | Zn²⁺ || Cu²⁺ | Cu</span>
+                            </div>
+                            <div class="cell-info-line">
+                                <span>Standard Potential (E⁰):</span>
+                                <span id="info-std-pot">+1.10 V</span>
+                            </div>
+                        </div>
+
+                        <button class="btn" id="galvanic-activate-btn" onclick="toggleCellCircuit()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 11-12.73 0M12 2v10"/></svg>
+                            <span id="circuit-btn-text">Close Circuit</span>
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Simulation 2: Electroplating Lab -->
+                <div class="lab-container" id="lab-plating">
+                    <div class="glass-card" style="display: flex; flex-direction: column;">
+                        
+                        <!-- Readout dashboard -->
+                        <div class="readout-grid">
+                            <div class="readout-card">
+                                <p>Plating Weight</p>
+                                <h4 id="plating-weight">0.00 mg</h4>
+                            </div>
+                            <div class="readout-card">
+                                <p>Current Load</p>
+                                <h4 id="plating-current-val">2.5 A</h4>
+                            </div>
+                            <div class="readout-card">
+                                <p>Timer</p>
+                                <h4 id="plating-timer">00:00</h4>
+                            </div>
+                        </div>
+
+                        <div class="electroplating-lab-canvas" id="plating-bubble-container">
+                            <svg class="electroplating-svg" viewBox="0 0 600 350">
+                                <!-- Beaker outer -->
+                                <rect x="150" y="100" width="300" height="220" rx="15" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.3)" stroke-width="4" />
+                                
+                                <!-- Solution filling -->
+                                <rect x="154" y="140" width="292" height="176" rx="5" id="plating-solution" fill="rgba(0, 242, 254, 0.12)" />
+                                
+                                <!-- Solution label -->
+                                <text x="300" y="295" text-anchor="middle" font-size="14" fill="#a4b0be" font-weight="600" id="plating-chem-label">Copper Sulfate (CuSO₄)</text>
+
+                                <!-- Battery Power Supply -->
+                                <rect x="250" y="15" width="100" height="50" rx="8" fill="#1b1c38" stroke="var(--color-primary)" stroke-width="2" />
+                                <text x="300" y="45" text-anchor="middle" font-family="'JetBrains Mono', monospace;" font-size="18" fill="var(--color-primary)" font-weight="bold">DC Source</text>
+                                
+                                <!-- Wires -->
+                                <!-- Positive wire to Anode -->
+                                <path d="M 250 40 L 210 40 L 210 100" fill="none" stroke="#ff4757" stroke-width="3" />
+                                <circle cx="210" cy="100" r="4" fill="#ff4757" />
+                                <text x="195" y="80" fill="#ff4757" font-weight="bold" font-size="14">+</text>
+                                
+                                <!-- Negative wire to Cathode object -->
+                                <path d="M 350 40 L 390 40 L 390 100" fill="none" stroke="#00f2fe" stroke-width="3" />
+                                <circle cx="390" cy="100" r="4" fill="#00f2fe" />
+                                <text x="405" y="80" fill="#00f2fe" font-weight="bold" font-size="14">-</text>
+
+                                <!-- Anode Metal Electrode (Left) -->
+                                <rect x="190" y="80" width="40" height="150" id="plating-anode" fill="#ff7f50" stroke="rgba(255,255,255,0.2)" />
+                                <text x="210" y="245" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold" id="plating-anode-label">Cu Anode</text>
+                                
+                                <!-- Cathode target object (Right) -->
+                                <g id="plated-object-group">
+                                    <!-- Spoon Graphic -->
+                                    <path d="M 385 80 L 385 180 Q 385 210 375 220 Q 365 230 385 240 Q 405 230 395 220 Q 385 210 385 180" fill="#708090" id="plating-cathode-base" />
+                                    <!-- Dynamic overlay coating -->
+                                    <path d="M 385 80 L 385 180 Q 385 210 375 220 Q 365 230 385 240 Q 405 230 395 220 Q 385 210 385 180" fill="none" id="plating-coating" class="plated-coating" />
+                                </g>
+                                <text x="390" y="260" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold" id="plating-cathode-label">Spoon</text>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Electroplating Settings sidebar -->
+                    <div class="glass-card lab-controls">
+                        <h3>Plating Controls</h3>
+                        
+                        <div class="control-group">
+                            <label for="plating-metal">Plating Metal</label>
+                            <select id="plating-metal" class="select-input" onchange="resetPlatingLab()">
+                                <option value="Cu" selected>Copper (Cu²⁺, Molar Mass: 63.55 g/mol)</option>
+                                <option value="Ag">Silver (Ag⁺, Molar Mass: 107.87 g/mol)</option>
+                                <option value="Au">Gold (Au³⁺, Molar Mass: 196.97 g/mol)</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="plating-object">Object to Plate</label>
+                            <select id="plating-object" class="select-input" onchange="resetPlatingLab()">
+                                <option value="spoon" selected>Metal Spoon</option>
+                                <option value="key">House Key</option>
+                                <option value="ring">Simple Band Ring</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group">
+                            <div style="display: flex; justify-content: space-between;">
+                                <label for="plating-current">Current Load</label>
+                                <span class="range-value" id="plating-current-label">2.5 A</span>
+                            </div>
+                            <input type="range" id="plating-current" min="0.1" max="5.0" step="0.1" value="2.5" class="select-input" style="padding: 0;" oninput="updatePlatingSliders()">
+                        </div>
+
+                        <div class="control-group">
+                            <div style="display: flex; justify-content: space-between;">
+                                <label for="plating-time">Plating Duration</label>
+                                <span class="range-value" id="plating-time-label">60 s</span>
+                            </div>
+                            <input type="range" id="plating-time" min="10" max="300" step="10" value="60" class="select-input" style="padding: 0;" oninput="updatePlatingSliders()">
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                            <button class="btn" id="start-plating-btn" onclick="startElectroplating()">
+                                Start Plating
+                            </button>
+                            <button class="btn btn-secondary" onclick="resetPlatingLab()">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= GAMES SECTION ================= -->
+            <section id="games-section" class="content-section">
+                <h1>Interactive Educational Games</h1>
+                <p class="subtitle">Reinforce your chemistry knowledge with two fun interactive modes.</p>
+                
+                <div class="game-grid">
+                    
+                    <!-- Game 1 Layout: Voltage Architect -->
+                    <div class="game-card-main">
+                        <h2>1. Voltage Architect</h2>
+                        <p class="subtitle" style="margin-bottom:1rem;">Match the target cell potential by constructing the appropriate chemical half-cells.</p>
+                        
+                        <div class="game-screen" id="game-architect-screen">
+                            <div class="game-hud">
+                                <div class="game-hud-stat">Level: <span id="arch-level">1/5</span></div>
+                                <div class="game-hud-stat">Score: <span id="arch-score">0</span></div>
+                            </div>
+
+                            <div class="target-box">
+                                <p>Target Voltage</p>
+                                <h2 id="arch-target-voltage">+1.10 V</h2>
+                            </div>
+
+                            <div class="architect-inputs">
+                                <div class="control-group">
+                                    <label for="arch-anode">Select Anode Metal</label>
+                                    <select id="arch-anode" class="select-input" onchange="calculateArchitectVoltage()">
+                                        <option value="Mg">Magnesium (Mg²⁺/Mg, -2.37 V)</option>
+                                        <option value="Zn">Zinc (Zn²⁺/Zn, -0.76 V)</option>
+                                        <option value="Fe">Iron (Fe²⁺/Fe, -0.44 V)</option>
+                                        <option value="Pb">Lead (Pb²⁺/Pb, -0.13 V)</option>
+                                        <option value="Cu">Copper (Cu²⁺/Cu, +0.34 V)</option>
+                                        <option value="Ag">Silver (Ag⁺/Ag, +0.80 V)</option>
+                                    </select>
+                                </div>
+
+                                <div class="control-group">
+                                    <label for="arch-cathode">Select Cathode Metal</label>
+                                    <select id="arch-cathode" class="select-input" onchange="calculateArchitectVoltage()">
+                                        <option value="Mg">Magnesium (Mg²⁺/Mg, -2.37 V)</option>
+                                        <option value="Zn">Zinc (Zn²⁺/Zn, -0.76 V)</option>
+                                        <option value="Fe">Iron (Fe²⁺/Fe, -0.44 V)</option>
+                                        <option value="Pb">Lead (Pb²⁺/Pb, -0.13 V)</option>
+                                        <option value="Cu">Copper (Cu²⁺/Cu, +0.34 V)</option>
+                                        <option value="Ag">Silver (Ag⁺/Ag, +0.80 V)</option>
+                                    </select>
+                                </div>
+
+                                <div class="control-group" id="arch-conc-control" style="display:none;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <label for="arch-conc-anode">Anode Ion Concentration</label>
+                                        <span class="range-value" id="arch-conc-anode-val">1.00 M</span>
+                                    </div>
+                                    <input type="range" id="arch-conc-anode" min="0.01" max="2.00" step="0.01" value="1.00" class="select-input" style="padding:0;" oninput="calculateArchitectVoltage()">
+                                </div>
+                            </div>
+
+                            <div class="architect-potential-meter">
+                                Current Design Voltage: <span id="arch-current-val">0.00 V</span>
+                            </div>
+
+                            <button class="btn mt-4" onclick="submitArchitectDesign()">Submit Design</button>
+                        </div>
+                    </div>
+
+                    <!-- Game 2 Layout: Redox Equalizer -->
+                    <div class="game-card-main">
+                        <h2>2. Redox Equalizer</h2>
+                        <p class="subtitle" style="margin-bottom:1rem;">Race against the clock to balance ionic charges and transfer coefficients in redox half-reactions.</p>
+                        
+                        <div class="game-screen" id="game-equalizer-screen">
+                            <!-- Start Screen -->
+                            <div id="equalizer-start-screen" style="text-align: center;">
+                                <div class="cert-badge">
+                                    <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.8L18.5 19H5.5L12 5.8z" /></svg>
+                                </div>
+                                <h3>Redox Equalizer</h3>
+                                <p style="color: var(--color-text-muted); margin: 15px 0 25px 0; line-height: 1.5;">You have 60 seconds to balance charge by choosing the correct amount of electrons ($e^-$) required to satisfy each redox half-reaction. Earn 100 points per correct answer!</p>
+                                <button class="btn" onclick="startEqualizerGame()">Start Challenge</button>
+                            </div>
+
+                            <!-- Active Play Screen -->
+                            <div id="equalizer-play-screen" style="display: none; height: 100%; position: relative;">
+                                <div class="game-hud">
+                                    <div class="game-hud-stat">Time Remaining: <span id="eq-timer">60s</span></div>
+                                    <div class="game-hud-stat">Score: <span id="eq-score">0</span></div>
+                                </div>
+
+                                <div class="equalizer-formula" id="eq-formula-box">
+                                    Fe³⁺ + ? e⁻ → Fe²⁺
+                                </div>
+
+                                <div class="equalizer-choices" id="eq-options-container">
+                                    <!-- Dynamically filled with options -->
+                                </div>
+
+                                <div class="game-timer-track">
+                                    <div class="game-timer-fill" id="eq-timer-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ================= QUIZ SECTION ================= -->
+            <section id="quiz-section" class="content-section">
+                <div class="quiz-container">
+                    <h1>Ultimate Electrochemistry Quiz</h1>
+                    <p class="subtitle">Complete this comprehensive test to demonstrate your scientific mastery.</p>
+                    
+                    <!-- Welcome/Start Card -->
+                    <div class="glass-card" id="quiz-start-card" style="text-align: center; padding: 3rem 2rem;">
+                        <div class="cert-badge" style="background: radial-gradient(circle, var(--color-primary) 0%, var(--color-secondary) 100%);">
+                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                        </div>
+                        <h2>Begin Your Examination</h2>
+                        <p style="color: var(--color-text-muted); max-width: 500px; margin: 15px auto 15px auto; line-height: 1.6;">This exam consists of 10 conceptual and calculation-based electrochemistry questions. Score 80% or higher to earn your downloadable certificate.</p>
+                        
+                        <div class="control-group" style="max-width: 320px; margin: 0 auto 25px auto;">
+                            <label for="student-name-entry" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.95rem; color: var(--color-primary); text-transform: none; letter-spacing: normal;">Enter Your Name for the Certificate</label>
+                            <input type="text" id="student-name-entry" class="select-input" placeholder="Your Name" value="" required>
+                        </div>
+                        
+                        <button class="btn" onclick="startQuiz()">Start Exam</button>
+                    </div>
+
+                    <!-- Active Quiz Card -->
+                    <div class="glass-card" id="quiz-active-card" style="display: none;">
+                        <div class="quiz-hud">
+                            <div>Question <span id="quiz-current-num">1</span> of 10</div>
+                            <div>Current Score: <span id="quiz-score-num">0</span>%</div>
+                        </div>
+                        <div class="quiz-progress-track">
+                            <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+                        </div>
+
+                        <div class="quiz-question-box">
+                            <h3 id="quiz-question-text">Question loading...</h3>
+                            <div class="quiz-options" id="quiz-options-container">
+                                <!-- Options dynamically rendered -->
+                            </div>
+                        </div>
+
+                        <!-- Feedback Panel -->
+                        <div class="quiz-explanation" id="quiz-explanation">
+                            <h5 id="quiz-explanation-title">Incorrect</h5>
+                            <p id="quiz-explanation-text">Explanation content</p>
+                            <button class="btn btn-secondary mt-4" id="quiz-next-btn" onclick="nextQuizQuestion()">Next Question</button>
+                        </div>
+                    </div>
+
+                    <!-- Certificate Result Panel -->
+                    <div class="glass-card certificate-panel" id="quiz-cert-card" style="display: none;">
+                        <h2>Congratulations, Scholar!</h2>
+                        <p class="subtitle" style="margin-bottom: 2rem;">You passed the master examination with a score of <span id="cert-score-display" style="color: var(--color-primary); font-weight: bold;">90%</span>.</p>
+
+                        <!-- Printable Certificate Artwork -->
+                        <div class="certificate-canvas-container" id="printable-certificate">
+                            <div class="cert-badge">
+                                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                            </div>
+                            <h3 class="cert-title">Certificate of Mastery</h3>
+                            <p class="cert-subtitle">in Electrochemistry & Chemical Systems</p>
+                            <div class="cert-name" id="cert-printed-name">Your Name</div>
+                            <p class="cert-text">For successfully demonstrating proficiency in electrochemical reactions, battery cell potentials, concentration cell thermodynamics, and Faraday's laws of electrolysis.</p>
+                            
+                            <div class="cert-footer-info">
+                                <div>
+                                    <p>Grade Achieved</p>
+                                    <p id="cert-grade" style="color: #fff; font-weight: bold; font-size:1.1rem;">A+</p>
+                                </div>
+                                <div>
+                                    <p>Authorized Signature</p>
+                                    <p class="cert-sig">ElectroLab Board</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-row-center">
+                            <button class="btn" onclick="printCertificate()">Print Certificate</button>
+                            <button class="btn btn-secondary" onclick="resetQuiz()">Retake Quiz</button>
+                        </div>
+                    </div>
+
+                    <!-- Failed Examination Result Panel -->
+                    <div class="glass-card" id="quiz-fail-card" style="display: none; text-align: center; padding: 3rem 2rem;">
+                        <div class="cert-badge" style="background: rgba(255, 71, 87, 0.1); box-shadow: none;">
+                            <svg viewBox="0 0 24 24" style="fill: var(--color-danger);"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z" /></svg>
+                        </div>
+                        <h2>Examination Incomplete</h2>
+                        <p style="color: var(--color-text-muted); max-width: 500px; margin: 15px auto 30px auto; line-height: 1.6;">You scored <span id="fail-score-display" style="color: var(--color-danger); font-weight: bold;">60%</span>. A minimum score of 80% is required to obtain your academic certificate. Re-study the lessons or run some laboratory experiments and try again!</p>
+                        <button class="btn" onclick="resetQuiz()">Try Exam Again</button>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        // Audio Synthesis Engine for Interactive UI Sound Effects
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            try {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                const now = audioCtx.currentTime;
+                
+                if (type === 'click') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.1);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                    osc.start(now);
+                    osc.stop(now + 0.1);
+                } else if (type === 'success') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                } else if (type === 'fail') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, now);
+                    osc.frequency.linearRampToValueAtTime(100, now + 0.3);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'tick') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(1000, now);
+                    gain.gain.setValueAtTime(0.02, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                }
+            } catch (e) {
+                console.log("Audio not allowed or supported yet", e);
+            }
+        }
+
+        // Global State
+        const userProgress = {
+            lessonsCompleted: [false, false, false, false],
+            simulationsRunCount: 0,
+            gamesPlayedCount: 0,
+            quizHighScore: 0
+        };
+
+        // Standard Reduction Potentials E0 (Metal / Ion Couples)
+        const standardReductionPotentials = {
+            'Mg': -2.37,
+            'Zn': -0.76,
+            'Fe': -0.44,
+            'Pb': -0.13,
+            'Cu': +0.34,
+            'Ag': +0.80
+        };
+
+        const valencyMap = {
+            'Mg': 2,
+            'Zn': 2,
+            'Fe': 2,
+            'Pb': 2,
+            'Cu': 2,
+            'Ag': 1
+        };
+
+        // Hex Colors representing electrodes
+        const metalColors = {
+            'Mg': '#b0c4de',
+            'Zn': '#a4b0be',
+            'Fe': '#8fbc8f',
+            'Pb': '#708090',
+            'Cu': '#ff7f50',
+            'Ag': '#e0e0e0'
+        };
+
+        // Solution Colors depending on metal ion
+        const solutionColors = {
+            'Mg': 'rgba(255, 255, 255, 0.06)',
+            'Zn': 'rgba(255, 255, 255, 0.06)',
+            'Fe': 'rgba(143, 188, 143, 0.25)', // pale light green
+            'Pb': 'rgba(255, 255, 255, 0.06)',
+            'Cu': 'rgba(0, 242, 254, 0.25)',   // beautiful copper blue
+            'Ag': 'rgba(240, 240, 240, 0.08)'
+        };
+
+        // Client-side Tab Switcher Router
+        function switchTab(tabId) {
+            playSound('click');
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            document.getElementById(`${tabId}-section`).classList.add('active');
+            
+            // Find active navigation anchor
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(link => {
+                if (link.getAttribute('onclick').includes(tabId)) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Specific page init hooks
+            if (tabId === 'lab') {
+                runGalvanicSimulation();
+                resetPlatingLab();
+            } else if (tabId === 'games') {
+                initArchitectGame();
+                resetEqualizerGame();
+            }
+            updateMasteryTracker();
+        }
+
+        // Mastery Progress calculations
+        function updateMasteryTracker() {
+            const lessonsCount = userProgress.lessonsCompleted.filter(Boolean).length;
+            document.getElementById('stat-lessons').innerText = `${lessonsCount}/4`;
+            document.getElementById('stat-labs').innerText = userProgress.simulationsRunCount;
+            document.getElementById('stat-games').innerText = userProgress.gamesPlayedCount;
+
+            // Compute weighted completion percentage
+            // Lessons = 40%, Labs = 30%, Game count = 20%, Quiz success = 10%
+            let percentage = (lessonsCount / 4) * 40;
+            percentage += Math.min(userProgress.simulationsRunCount, 5) * 6; // max 30%
+            percentage += Math.min(userProgress.gamesPlayedCount, 4) * 5; // max 20%
+            percentage += (userProgress.quizHighScore >= 80) ? 10 : 0;
+            
+            percentage = Math.round(percentage);
+            document.getElementById('mastery-progress-bar').style.width = `${percentage}%`;
+            document.getElementById('mastery-text').innerText = `${percentage}% Done`;
+        }
+
+        // ================= LESSONS MODULES LOGIC =================
+        function selectLesson(index) {
+            playSound('click');
+            document.querySelectorAll('.lesson-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.lesson-content').forEach(c => c.classList.remove('active'));
+
+            document.getElementById(`lesson-btn-${index}`).classList.add('active');
+            document.getElementById(`lesson-content-${index}`).classList.add('active');
+        }
+
+        function answerCheckpoint(lessonIndex, selectedVal, isCorrect, explanationText) {
+            const feedbackBox = document.getElementById(`feedback-${lessonIndex}`);
+            feedbackBox.style.display = 'block';
+            
+            // Clean styles first
+            const options = document.getElementById(`checkpoint-${lessonIndex}`).querySelectorAll('.checkpoint-option');
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+                if (opt.innerText.includes(selectedVal)) {
+                    if (isCorrect) {
+                        opt.classList.add('correct');
+                    } else {
+                        opt.classList.add('incorrect');
+                    }
+                }
+            });
+
+            if (isCorrect) {
+                playSound('success');
+                feedbackBox.style.color = 'var(--color-primary)';
+                feedbackBox.innerHTML = `🎉 Correct! ${explanationText}`;
+                
+                // Mark unit completed
+                if (!userProgress.lessonsCompleted[lessonIndex - 1]) {
+                    userProgress.lessonsCompleted[lessonIndex - 1] = true;
+                    document.getElementById(`lesson-btn-${lessonIndex}`).classList.add('completed');
+                    updateMasteryTracker();
+                }
+            } else {
+                playSound('fail');
+                feedbackBox.style.color = 'var(--color-danger)';
+                feedbackBox.innerHTML = `❌ Incorrect. ${explanationText}`;
+            }
+        }
+
+        // ================= VIRTUAL LAB LOGIC =================
+        let activeLab = 'galvanic';
+        let cellCircuitClosed = false;
+        let cellAnimationInterval = null;
+        let particleSpawnInterval = null;
+
+        function switchLab(labName) {
+            playSound('click');
+            activeLab = labName;
+            document.getElementById('lab-btn-galvanic').classList.remove('active');
+            document.getElementById('lab-btn-plating').classList.remove('active');
+            document.getElementById('lab-galvanic').classList.remove('active');
+            document.getElementById('lab-plating').classList.remove('active');
+
+            if (labName === 'galvanic') {
+                document.getElementById('lab-btn-galvanic').classList.add('active');
+                document.getElementById('lab-galvanic').classList.add('active');
+                runGalvanicSimulation();
+            } else {
+                document.getElementById('lab-btn-plating').classList.add('active');
+                document.getElementById('lab-plating').classList.add('active');
+                resetPlatingLab();
+            }
+        }
+
+        // Nernst & cell visual simulation engine
+        function runGalvanicSimulation() {
+            const metalLeft = document.getElementById('galvanic-left').value;
+            const metalRight = document.getElementById('galvanic-right').value;
+            const concLeft = parseFloat(document.getElementById('conc-left').value);
+            const concRight = parseFloat(document.getElementById('conc-right').value);
+            const tempVal = parseFloat(document.getElementById('temp-slider').value);
+
+            // Redraw electrode labels and colors
+            document.getElementById('left-electrode-label').textContent = metalLeft;
+            document.getElementById('right-electrode-label').textContent = metalRight;
+            document.getElementById('left-solution-label').textContent = `${metalLeft}²⁺ (${concLeft.toFixed(2)} M)`;
+            // Silver is single charge, adjusting text
+            if (metalLeft === 'Ag') document.getElementById('left-solution-label').textContent = `Ag⁺ (${concLeft.toFixed(2)} M)`;
+            document.getElementById('right-solution-label').textContent = `${metalRight}²⁺ (${concRight.toFixed(2)} M)`;
+            if (metalRight === 'Ag') document.getElementById('right-solution-label').textContent = `Ag⁺ (${concRight.toFixed(2)} M)`;
+
+            document.getElementById('left-electrode').setAttribute('fill', metalColors[metalLeft]);
+            document.getElementById('right-electrode').setAttribute('fill', metalColors[metalRight]);
+            document.getElementById('left-solution').setAttribute('fill', solutionColors[metalLeft]);
+            document.getElementById('right-solution').setAttribute('fill', solutionColors[metalRight]);
+
+            // Calculate standard potential
+            const e0Left = standardReductionPotentials[metalLeft];
+            const e0Right = standardReductionPotentials[metalRight];
+            
+            // Standard galvanic flow configurations: Anode is oxidation (lower potential)
+            let anodeMetal = metalLeft;
+            let cathodeMetal = metalRight;
+            let e0Anode = e0Left;
+            let e0Cathode = e0Right;
+            let isLeftAnode = true;
+
+            if (e0Left > e0Right) {
+                // Left is cathode, Right is anode
+                anodeMetal = metalRight;
+                cathodeMetal = metalLeft;
+                e0Anode = e0Right;
+                e0Cathode = e0Left;
+                isLeftAnode = false;
+            }
+
+            const standardCellPotential = e0Cathode - e0Anode;
+            document.getElementById('info-std-pot').innerText = `+${standardCellPotential.toFixed(2)} V`;
+
+            // Notation builder
+            const zAnode = valencyMap[anodeMetal] === 1 ? '⁺' : '²⁺';
+            const zCathode = valencyMap[cathodeMetal] === 1 ? '⁺' : '²⁺';
+            document.getElementById('info-notation').innerText = `${anodeMetal} | ${anodeMetal}${zAnode} || ${cathodeMetal}${zCathode} | ${cathodeMetal}`;
+
+            // Calculate Cell Potential with Nernst Equation
+            // Anode reaction: M_a -> M_a^za+ + za e-
+            // Cathode reaction: M_c^zc+ + zc e- -> M_c
+            // n (transferred electrons) = LCM of valencies
+            const vAnode = valencyMap[anodeMetal];
+            const vCathode = valencyMap[cathodeMetal];
+            
+            // Least Common Multiple
+            const nElectrons = (vAnode * vCathode) / gcd(vAnode, vCathode);
+            
+            // Coefficients
+            const coeffAnode = nElectrons / vAnode;
+            const coeffCathode = nElectrons / vCathode;
+
+            // Concentration of Anode & Cathode ions
+            const cAnode = isLeftAnode ? concLeft : concRight;
+            const cCathode = isLeftAnode ? concRight : concLeft;
+
+            // Reaction Quotient Q = [Anode]^coeffAnode / [Cathode]^coeffCathode
+            const Q = Math.pow(cAnode, coeffAnode) / Math.pow(cCathode, coeffCathode);
+            
+            // Nernst: E = E0 - (R*T)/(n*F) * ln(Q)
+            const R = 8.314;
+            const F = 96485;
+            const T = tempVal + 273.15; // Kelvin
+            
+            let calculatedPotential = standardCellPotential - ((R * T) / (nElectrons * F)) * Math.log(Q);
+            
+            // Write equations
+            const zAnodeNum = valencyMap[anodeMetal];
+            const zCathodeNum = valencyMap[cathodeMetal];
+            document.getElementById('anode-reaction-text').innerHTML = `${anodeMetal} &rarr; ${anodeMetal}${zAnodeNum === 1 ? '⁺' : '²⁺'} + ${zAnodeNum}e&macr;`;
+            document.getElementById('cathode-reaction-text').innerHTML = `${cathodeMetal}${zCathodeNum === 1 ? '⁺' : '²⁺'} + ${zCathodeNum}e&macr; &rarr; ${cathodeMetal}`;
+
+            // Voltmeter readouts
+            if (cellCircuitClosed) {
+                document.getElementById('voltmeter-val').innerText = calculatedPotential.toFixed(3);
+                document.getElementById('voltmeter-val').style.color = calculatedPotential >= 0 ? 'var(--color-primary)' : 'var(--color-danger)';
+                document.getElementById('info-spont').innerText = calculatedPotential >= 0 ? 'Yes' : 'No (Requires electrolytic push)';
+                document.getElementById('info-spont').style.color = calculatedPotential >= 0 ? 'var(--color-primary)' : 'var(--color-danger)';
+                
+                // Trigger flowing animations
+                startWireAnimation(isLeftAnode, calculatedPotential >= 0);
+            } else {
+                document.getElementById('voltmeter-val').innerText = "0.000";
+                document.getElementById('voltmeter-val').style.color = 'var(--color-primary)';
+                document.getElementById('info-spont').innerText = "Circuit Open";
+                document.getElementById('info-spont').style.color = 'var(--color-text-muted)';
+                stopWireAnimation();
+            }
+        }
+
+        function gcd(a, b) {
+            return b ? gcd(b, a % b) : a;
+        }
+
+        function updateConcentrations() {
+            const concLeft = parseFloat(document.getElementById('conc-left').value);
+            const concRight = parseFloat(document.getElementById('conc-right').value);
+            const tempVal = parseFloat(document.getElementById('temp-slider').value);
+
+            document.getElementById('conc-left-val').innerText = `${concLeft.toFixed(2)} M`;
+            document.getElementById('conc-right-val').innerText = `${concRight.toFixed(2)} M`;
+            document.getElementById('temp-val').innerText = `${tempVal} °C`;
+            runGalvanicSimulation();
+        }
+
+        function toggleCellCircuit() {
+            playSound('click');
+            cellCircuitClosed = !cellCircuitClosed;
+            
+            const btn = document.getElementById('galvanic-activate-btn');
+            const btnText = document.getElementById('circuit-btn-text');
+            
+            if (cellCircuitClosed) {
+                btn.classList.add('btn-outline');
+                btnText.innerText = "Open Circuit";
+                userProgress.simulationsRunCount++;
+                updateMasteryTracker();
+            } else {
+                btn.classList.remove('btn-outline');
+                btnText.innerText = "Close Circuit";
+            }
+            
+            runGalvanicSimulation();
+        }
+
+        // SVG Wire Animation Manager
+        function startWireAnimation(isLeftAnode, isSpontaneous) {
+            stopWireAnimation();
+            
+            const e1 = document.getElementById('e1');
+            const e2 = document.getElementById('e2');
+            const e3 = document.getElementById('e3');
+            
+            e1.style.display = 'block';
+            e2.style.display = 'block';
+            e3.style.display = 'block';
+
+            // Electrons move Anode -> Cathode
+            // If Left is Anode, move left to right.
+            const forwardPath = [
+                {x: 150, y: 110}, {x: 150, y: 50}, {x: 310, y: 50},
+                {x: 390, y: 50}, {x: 550, y: 50}, {x: 550, y: 110}
+            ];
+
+            const reversePath = [...forwardPath].reverse();
+            
+            const selectedPath = isLeftAnode ? forwardPath : reversePath;
+            if (!isSpontaneous) {
+                stopWireAnimation();
+                return;
+            }
+
+            let progress = [0, 0.33, 0.66]; // electron spacing offset
+
+            cellAnimationInterval = setInterval(() => {
+                for (let i = 0; i < 3; i++) {
+                    progress[i] += 0.02;
+                    if (progress[i] > 1) progress[i] = 0;
+                    
+                    const coord = getPointOnPath(selectedPath, progress[i]);
+                    const node = document.getElementById(`e${i+1}`);
+                    node.setAttribute('cx', coord.x);
+                    node.setAttribute('cy', coord.y);
+                }
+            }, 30);
+
+            // Spawn solution ions migrating
+            startIonMigrationParticles(isLeftAnode);
+        }
+
+        function stopWireAnimation() {
+            if (cellAnimationInterval) clearInterval(cellAnimationInterval);
+            if (particleSpawnInterval) clearInterval(particleSpawnInterval);
+            
+            document.getElementById('e1').style.display = 'none';
+            document.getElementById('e2').style.display = 'none';
+            document.getElementById('e3').style.display = 'none';
+        }
+
+        function getPointOnPath(points, percent) {
+            let segments = [];
+            let totalLength = 0;
+            for (let i = 0; i < points.length - 1; i++) {
+                const dx = points[i+1].x - points[i].x;
+                const dy = points[i+1].y - points[i].y;
+                const length = Math.sqrt(dx*dx + dy*dy);
+                segments.push({from: points[i], to: points[i+1], length: length});
+                totalLength += length;
+            }
+
+            let targetDistance = percent * totalLength;
+            let currentDistance = 0;
+            
+            for (let i = 0; i < segments.length; i++) {
+                const seg = segments[i];
+                if (currentDistance + seg.length >= targetDistance) {
+                    const localPercent = (targetDistance - currentDistance) / seg.length;
+                    const x = seg.from.x + localPercent * (seg.to.x - seg.from.x);
+                    const y = seg.from.y + localPercent * (seg.to.y - seg.from.y);
+                    return {x: x, y: y};
+                }
+                currentDistance += seg.length;
+            }
+            return points[points.length - 1];
+        }
+
+        // Floating ion indicators
+        function startIonMigrationParticles(isLeftAnode) {
+            const container = document.querySelector('.lab-canvas-card');
+            
+            particleSpawnInterval = setInterval(() => {
+                const leftBeakerLeft = 80;
+                const leftBeakerTop = 200;
+                const leftBeakerWidth = 140;
+                
+                const rightBeakerLeft = 480;
+                const rightBeakerTop = 200;
+                const rightBeakerWidth = 140;
+
+                const anionNode = document.createElement('div');
+                anionNode.className = 'ion-bullet ion-anion';
+                anionNode.style.top = '120px';
+                anionNode.style.left = '350px';
+                container.appendChild(anionNode);
+                
+                const targetX = isLeftAnode ? 180 : 520;
+                anionNode.animate([
+                    { left: '350px', top: '120px', opacity: 1 },
+                    { left: `${targetX}px`, top: '140px', opacity: 1 },
+                    { left: `${targetX}px`, top: '220px', opacity: 0 }
+                ], { duration: 2500, easing: 'ease-out' });
+
+                setTimeout(() => anionNode.remove(), 2500);
+
+                const cationNode = document.createElement('div');
+                cationNode.className = 'ion-bullet ion-cation';
+                cationNode.style.top = '120px';
+                cationNode.style.left = '350px';
+                container.appendChild(cationNode);
+
+                const targetXCat = isLeftAnode ? 520 : 180;
+                cationNode.animate([
+                    { left: '350px', top: '120px', opacity: 1 },
+                    { left: `${targetXCat}px`, top: '140px', opacity: 1 },
+                    { left: `${targetXCat}px`, top: '220px', opacity: 0 }
+                ], { duration: 2500, easing: 'ease-out' });
+
+                setTimeout(() => cationNode.remove(), 2500);
+            }, 1000);
+        }
+
+
+        // ================= ELECTROPLATING STATION LOGIC =================
+        let platingActive = false;
+        let platingTimerInterval = null;
+        let platingElapsedSeconds = 0;
+        let totalPlatingSeconds = 60;
+        let platingMassDeposited = 0;
+
+        const platingWeights = {
+            'Cu': 63.55,
+            'Ag': 107.87,
+            'Au': 196.97
+        };
+
+        const platingValency = {
+            'Cu': 2,
+            'Ag': 1,
+            'Au': 3
+        };
+
+        const platingColors = {
+            'Cu': 'coral',
+            'Ag': '#c0c0c0',
+            'Au': '#ffd700'
+        };
+
+        const platingBeakerColors = {
+            'Cu': 'rgba(0, 242, 254, 0.18)', 
+            'Ag': 'rgba(255, 255, 255, 0.08)', 
+            'Au': 'rgba(255, 165, 0, 0.12)'  
+        };
+
+        const objectPaths = {
+            'spoon': 'M 385 80 L 385 180 Q 385 210 375 220 Q 365 230 385 240 Q 405 230 395 220 Q 385 210 385 180',
+            'key': 'M 385 80 L 385 170 C 375 170 370 178 370 185 C 370 195 380 200 385 200 L 385 230 L 395 230 L 395 220 L 385 220 L 385 210 L 395 210 L 395 200 L 385 200 C 390 200 400 195 400 185 C 400 178 395 170 385 170 Z',
+            'ring': 'M 385 120 C 365 120 350 140 350 160 C 350 180 365 200 385 200 C 405 200 420 180 420 160 C 420 140 405 120 385 120 M 385 140 C 395 140 400 150 400 160 C 400 170 395 180 385 180 C 375 180 370 170 370 160 C 370 150 375 140 385 140'
+        };
+
+        function resetPlatingLab() {
+            if (platingTimerInterval) clearInterval(platingTimerInterval);
+            platingActive = false;
+            platingElapsedSeconds = 0;
+            platingMassDeposited = 0;
+
+            const metal = document.getElementById('plating-metal').value;
+            const obj = document.getElementById('plating-object').value;
+            
+            document.getElementById('plating-chem-label').textContent = 
+                metal === 'Cu' ? 'Copper Sulfate (CuSO₄)' : 
+                metal === 'Ag' ? 'Silver Nitrate (AgNO₃)' : 'Gold Chloride (AuCl₃)';
+            
+            document.getElementById('plating-anode-label').textContent = `${metal} Anode`;
+            document.getElementById('plating-cathode-label').textContent = obj.charAt(0).toUpperCase() + obj.slice(1);
+            
+            document.getElementById('plating-anode').setAttribute('fill', metalColors[metal]);
+            document.getElementById('plating-solution').setAttribute('fill', platingBeakerColors[metal]);
+            
+            const baseObj = document.getElementById('plating-cathode-base');
+            baseObj.setAttribute('d', objectPaths[obj]);
+            
+            const coating = document.getElementById('plating-coating');
+            coating.setAttribute('d', objectPaths[obj]);
+            coating.setAttribute('fill', 'none');
+            coating.style.opacity = '0';
+            
+            document.getElementById('plating-weight').innerText = '0.00 mg';
+            document.getElementById('plating-timer').innerText = '00:00';
+            document.getElementById('start-plating-btn').innerText = 'Start Plating';
+            document.getElementById('start-plating-btn').removeAttribute('disabled');
+            
+            updatePlatingSliders();
+        }
+
+        function updatePlatingSliders() {
+            const current = parseFloat(document.getElementById('plating-current').value);
+            const time = parseInt(document.getElementById('plating-time').value);
+
+            document.getElementById('plating-current-val').innerText = `${current.toFixed(1)} A`;
+            document.getElementById('plating-current-label').innerText = `${current.toFixed(1)} A`;
+            document.getElementById('plating-time-label').innerText = `${time} s`;
+            
+            if (!platingActive) {
+                totalPlatingSeconds = time;
+                const mStr = Math.floor(time / 60).toString().padStart(2, '0');
+                const sStr = (time % 60).toString().padStart(2, '0');
+                document.getElementById('plating-timer').innerText = `${mStr}:${sStr}`;
+            }
+        }
+
+        function startElectroplating() {
+            if (platingActive) return;
+            playSound('click');
+            platingActive = true;
+            
+            const btn = document.getElementById('start-plating-btn');
+            btn.setAttribute('disabled', 'true');
+            btn.innerText = 'Plating...';
+            
+            const current = parseFloat(document.getElementById('plating-current').value);
+            const metal = document.getElementById('plating-metal').value;
+            const M = platingWeights[metal];
+            const z = platingValency[metal];
+            const F = 96485;
+
+            const bubbleInterval = setInterval(() => {
+                if (!platingActive) {
+                    clearInterval(bubbleInterval);
+                    return;
+                }
+                createPlatingBubble();
+            }, 150);
+
+            platingTimerInterval = setInterval(() => {
+                platingElapsedSeconds++;
+                
+                platingMassDeposited = (current * platingElapsedSeconds * M) / (z * F) * 1000;
+                document.getElementById('plating-weight').innerText = `${platingMassDeposited.toFixed(2)} mg`;
+                
+                const percentDone = platingElapsedSeconds / totalPlatingSeconds;
+                const coating = document.getElementById('plating-coating');
+                coating.setAttribute('fill', platingColors[metal]);
+                coating.style.opacity = percentDone * 0.9;
+                
+                const remaining = totalPlatingSeconds - platingElapsedSeconds;
+                const mStr = Math.floor(remaining / 60).toString().padStart(2, '0');
+                const sStr = (remaining % 60).toString().padStart(2, '0');
+                document.getElementById('plating-timer').innerText = `${mStr}:${sStr}`;
+                playSound('tick');
+
+                if (platingElapsedSeconds >= totalPlatingSeconds) {
+                    clearInterval(platingTimerInterval);
+                    clearInterval(bubbleInterval);
+                    platingActive = false;
+                    playSound('success');
+                    btn.innerText = 'Completed';
+                    userProgress.simulationsRunCount++;
+                    updateMasteryTracker();
+                }
+            }, 1000);
+        }
+
+        function createPlatingBubble() {
+            const container = document.getElementById('plating-bubble-container');
+            const bubble = document.createElement('div');
+            bubble.className = 'bubbling-particle';
+            
+            const leftSpawn = 150 + Math.random() * 300;
+            bubble.style.left = `${leftSpawn}px`;
+            container.appendChild(bubble);
+
+            setTimeout(() => bubble.remove(), 2000);
+        }
+
+
+        // ================= EDUCATIONAL GAMES LOGIC =================
+        
+        // --- GAME 1: VOLTAGE ARCHITECT ---
+        let archLevel = 1;
+        let archScore = 0;
+        let archTargetPot = 0;
+        const architectTargets = [1.10, 1.56, 0.46, 1.93, 1.04]; 
+
+        function initArchitectGame() {
+            archLevel = 1;
+            archScore = 0;
+            document.getElementById('arch-level').innerText = "1/5";
+            document.getElementById('arch-score').innerText = "0";
+            loadArchitectLevel();
+        }
+
+        function loadArchitectLevel() {
+            archTargetPot = architectTargets[archLevel - 1];
+            document.getElementById('arch-target-voltage').innerText = `+${archTargetPot.toFixed(2)} V`;
+            
+            if (archLevel === 5) {
+                document.getElementById('arch-conc-control').style.display = 'block';
+                document.getElementById('architect-level-desc').innerHTML = '<strong>Advanced Level:</strong> Target: +1.04 V. Hint: Select Zn anode, Cu cathode and adjust Anode Concentration.';
+            } else {
+                document.getElementById('arch-conc-control').style.display = 'none';
+                document.getElementById('architect-level-desc').innerText = 'Select the appropriate Anode and Cathode combination to match the target standard potential.';
+            }
+            calculateArchitectVoltage();
+        }
+
+        function calculateArchitectVoltage() {
+            const anode = document.getElementById('arch-anode').value;
+            const cathode = document.getElementById('arch-cathode').value;
+            const concAnode = parseFloat(document.getElementById('arch-conc-anode').value);
+            document.getElementById('arch-conc-anode-val').innerText = `${concAnode.toFixed(2)} M`;
+
+            const e0Anode = standardReductionPotentials[anode];
+            const e0Cathode = standardReductionPotentials[cathode];
+            
+            let voltage = e0Cathode - e0Anode;
+            
+            if (archLevel === 5 && anode === 'Zn' && cathode === 'Cu') {
+                voltage = 1.10 - (0.0592 / 2) * Math.log10(concAnode / 1.0);
+            }
+
+            document.getElementById('arch-current-val').innerText = `${voltage.toFixed(2)} V`;
+        }
+
+        function submitArchitectDesign() {
+            const anode = document.getElementById('arch-anode').value;
+            const cathode = document.getElementById('arch-cathode').value;
+            const concAnode = parseFloat(document.getElementById('arch-conc-anode').value);
+            
+            const e0Anode = standardReductionPotentials[anode];
+            const e0Cathode = standardReductionPotentials[cathode];
+            let voltage = e0Cathode - e0Anode;
+            
+            if (archLevel === 5 && anode === 'Zn' && cathode === 'Cu') {
+                voltage = 1.10 - (0.0592 / 2) * Math.log10(concAnode / 1.0);
+            }
+
+            const difference = Math.abs(voltage - archTargetPot);
+
+            if (difference <= 0.015) {
+                playSound('success');
+                archScore += 100;
+                document.getElementById('arch-score').innerText = archScore;
+                
+                alert(`🎯 Perfect! You matched the target voltage of +${archTargetPot.toFixed(2)} V!`);
+                
+                if (archLevel < 5) {
+                    archLevel++;
+                    document.getElementById('arch-level').innerText = `${archLevel}/5`;
+                    loadArchitectLevel();
+                } else {
+                    alert(`🏆 Congratulations! You have fully completed the Voltage Architect game!`);
+                    userProgress.gamesPlayedCount++;
+                    updateMasteryTracker();
+                }
+            } else {
+                playSound('fail');
+                alert(`❌ Keep trying! The calculated voltage is ${voltage.toFixed(2)} V, but the target is +${archTargetPot.toFixed(2)} V.`);
+            }
+        }
+
+
+        // --- GAME 2: REDOX EQUALIZER ---
+        let eqScore = 0;
+        let eqTimer = 60;
+        let eqInterval = null;
+        let eqCurrentQuestion = {};
+
+        const halfReactionsDb = [
+            { text: "Cu &rarr; Cu²⁺ + ? e&macr;", ans: 2, opts: [1, 2, 3, 4] },
+            { text: "Fe³⁺ + ? e&macr; &rarr; Fe²⁺", ans: 1, opts: [1, 2, 3, 5] },
+            { text: "Al &rarr; Al³⁺ + ? e&macr;", ans: 3, opts: [1, 2, 3, 4] },
+            { text: "O₂ + 4 H⁺ + ? e&macr; &rarr; 2 H₂O", ans: 4, opts: [2, 3, 4, 6] },
+            { text: "MnO₄&macr; + 8 H⁺ + ? e&macr; &rarr; Mn²⁺ + 4 H₂O", ans: 5, opts: [3, 4, 5, 7] },
+            { text: "Cr₂O₇²&macr; + 14 H⁺ + ? e&macr; &rarr; 2 Cr³⁺ + 7 H₂O", ans: 6, opts: [4, 5, 6, 8] },
+            { text: "2 Cl&macr; &rarr; Cl₂ + ? e&macr;", ans: 2, opts: [1, 2, 3, 4] },
+            { text: "Pb²⁺ + ? e&macr; &rarr; Pb", ans: 2, opts: [1, 2, 3, 4] },
+            { text: "Na⁺ + ? e&macr; &rarr; Na", ans: 1, opts: [1, 2, 3, 4] },
+            { text: "H₂O₂ + 2 H⁺ + ? e&macr; &rarr; 2 H₂O", ans: 2, opts: [1, 2, 3, 4] }
+        ];
+
+        function resetEqualizerGame() {
+            if (eqInterval) clearInterval(eqInterval);
+            document.getElementById('equalizer-start-screen').style.display = 'block';
+            document.getElementById('equalizer-play-screen').style.display = 'none';
+        }
+
+        function startEqualizerGame() {
+            playSound('click');
+            eqScore = 0;
+            eqTimer = 60;
+            
+            document.getElementById('equalizer-start-screen').style.display = 'none';
+            document.getElementById('equalizer-play-screen').style.display = 'block';
+            document.getElementById('eq-score').innerText = eqScore;
+            document.getElementById('eq-timer').innerText = `${eqTimer}s`;
+
+            const timerFill = document.getElementById('eq-timer-fill');
+            timerFill.style.width = '100%';
+
+            nextEqualizerQuestion();
+
+            eqInterval = setInterval(() => {
+                eqTimer--;
+                document.getElementById('eq-timer').innerText = `${eqTimer}s`;
+                
+                const percentLeft = (eqTimer / 60) * 100;
+                timerFill.style.width = `${percentLeft}%`;
+
+                if (eqTimer <= 0) {
+                    clearInterval(eqInterval);
+                    playSound('success');
+                    alert(`🏁 Time's up! You scored ${eqScore} points in the Redox Equalizer!`);
+                    userProgress.gamesPlayedCount++;
+                    updateMasteryTracker();
+                    resetEqualizerGame();
+                }
+            }, 1000);
+        }
+
+        function nextEqualizerQuestion() {
+            const randomIndex = Math.floor(Math.random() * halfReactionsDb.length);
+            eqCurrentQuestion = halfReactionsDb[randomIndex];
+
+            document.getElementById('eq-formula-box').innerHTML = eqCurrentQuestion.text;
+            
+            const optionsBox = document.getElementById('eq-options-container');
+            optionsBox.innerHTML = '';
+
+            eqCurrentQuestion.opts.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'equalizer-choice-btn';
+                btn.innerText = opt;
+                btn.onclick = () => submitEqualizerAnswer(opt);
+                optionsBox.appendChild(btn);
+            });
+        }
+
+        function submitEqualizerAnswer(val) {
+            if (val === eqCurrentQuestion.ans) {
+                playSound('success');
+                eqScore += 100;
+                document.getElementById('eq-score').innerText = eqScore;
+                nextEqualizerQuestion();
+            } else {
+                playSound('fail');
+                const fill = document.getElementById('eq-timer-fill');
+                fill.style.background = 'var(--color-danger)';
+                setTimeout(() => {
+                    fill.style.background = 'linear-gradient(to right, var(--color-primary), var(--color-secondary))';
+                }, 300);
+            }
+        }
+
+
+        // ================= ULTIMATE QUIZ LOGIC =================
+        let quizIndex = 0;
+        let quizPoints = 0;
+        let studentName = "Electrochemical Scholar";
+        let quizQuestions = [];
+        
+        const quizQuestionsPool = [
+            {
+                q: "Which device converts chemical energy from a spontaneous redox reaction into electrical energy?",
+                opts: ["Electrolytic Cell", "Galvanic Cell", "Concentration Cell without current", "Voltaic battery containing basic oxides"],
+                ans: 1, 
+                exp: "A Galvanic (or Voltaic) cell harnesses spontaneous reactions to generate electricity. Electrolytic cells utilize electricity to force non-spontaneous reactions."
+            },
+            {
+                q: "At which electrode does oxidation always take place?",
+                opts: ["Anode", "Cathode", "Salt Bridge", "Voltmeter"],
+                ans: 0,
+                exp: "Recall the mnemonic: 'AN OX'. Oxidation (loss of electrons) always occurs at the Anode electrode."
+            },
+            {
+                q: "What is the primary function of the salt bridge in a galvanic cell?",
+                opts: ["To deliver electrical power directly to the circuit", "To prevent electrons from migrating", "To maintain electrical neutrality by allowing ions to flow", "To increase solution temperature"],
+                ans: 2,
+                exp: "The salt bridge maintains charge balance (neutrality) as ions build up and deplete in the anode and cathode chambers."
+            },
+            {
+                q: "What is the oxidation state of Chromium (Cr) in Cr₂O₇²\u207B?",
+                opts: ["+3", "+6", "+12", "-2"],
+                ans: 1,
+                exp: "Algebra: 2(Cr) + 7(-2) = -2. 2(Cr) - 14 = -2. 2(Cr) = +12. Cr = +6."
+            },
+            {
+                q: "For the reduction standard values: Mg²⁺/Mg = -2.37 V, Ag⁺/Ag = +0.80 V. What is the standard cell potential (E⁰) when these two half-cells are connected?",
+                opts: ["-1.57 V", "+1.57 V", "+3.17 V", "-3.17 V"],
+                ans: 2,
+                exp: "E⁰_cell = E⁰_cathode - E⁰_anode = +0.80 V - (-2.37 V) = +3.17 V."
+            },
+            {
+                q: "According to Faraday's law, doubling the electric current (I) passed through an electrolytic cell will have what effect on the mass of metal plated?",
+                opts: ["Quarter the mass", "Double the mass", "Keep mass identical", "Square the mass"],
+                ans: 1,
+                exp: "Mass is directly proportional to current (m = I * t * M / zF), so doubling current doubles the mass deposited."
+            },
+            {
+                q: "Under what condition does cell potential (E) calculated by Nernst equation equal standard potential (E⁰)?",
+                opts: ["When reactant and product concentrations are exactly 1.0 M", "When temperature is exactly 0 Kelvin", "At chemical equilibrium (Q = K)", "When voltmeter is disconnected"],
+                ans: 0,
+                exp: "When concentrations are 1.0 M, Q = 1. Since log(1) = 0, the Nernst correction term becomes 0, so E = E⁰."
+            },
+            {
+                q: "Which direction do electrons flow in a galvanic cell's external wire?",
+                opts: ["Cathode to Anode", "Anode to Cathode", "Through the salt bridge only", "From positive terminal to negative terminal"],
+                ans: 1,
+                exp: "Electrons are generated by oxidation at the anode (-) and travel through the circuit wire to the cathode (+) where reduction occurs."
+            },
+            {
+                q: "What does a negative cell potential (E_cell < 0) tell us about the reaction?",
+                opts: ["The reaction is highly spontaneous", "The cell is galvanic", "The reaction is non-spontaneous", "The reaction rate is infinitely fast"],
+                ans: 2,
+                exp: "A negative potential means standard Gibbs free energy is positive (dG = -nFE), indicating the chemical process is non-spontaneous."
+            },
+            {
+                q: "If you construct a Concentration Cell with Copper electrodes in 0.1 M and 1.0 M Cu²⁺ solutions, which chamber acts as the cathode?",
+                opts: ["The 0.1 M solution chamber", "The 1.0 M solution chamber", "Both chambers equally", "Neither chamber"],
+                ans: 1,
+                exp: "In concentration cells, reduction occurs in the more concentrated half-cell to pull ions out of solution. Thus, the 1.0 M chamber acts as the cathode."
+            },
+            {
+                q: "In a lead-acid car battery, what is the composition of the anode?",
+                opts: ["Lead dioxide (PbO₂)", "Lead metal (Pb)", "Lead sulfate (PbSO₄)", "Sulfuric acid (H₂SO₄)"],
+                ans: 1,
+                exp: "The anode in a lead-acid cell is composed of sponge lead metal (Pb), while the cathode is lead dioxide (PbO₂)."
+            },
+            {
+                q: "Which equation directly relates the standard cell potential (E⁰) to the thermodynamic equilibrium constant (K) at 298 K?",
+                opts: ["E⁰ = (0.0592 / n) log K", "E⁰ = -n F E", "E⁰ = R T ln K", "E⁰ = (n / 0.0592) log K"],
+                ans: 0,
+                exp: "At 298 K, standard cell potential is related to K by E⁰ = (RT / nF) ln K, which simplifies to E⁰ = (0.0592 / n) log₁₀ K."
+            },
+            {
+                q: "What happens to the mass of the anode electrode as a Zn-Cu galvanic cell discharges?",
+                opts: ["It increases because zinc plates onto it", "It decreases because zinc atoms dissolve as Zn²⁺ ions", "It remains constant because zinc is inert", "It increases due to gas bubble formation"],
+                ans: 1,
+                exp: "At the anode, oxidation occurs: Zn(s) &rarr; Zn²⁺(aq) + 2e⁻. Zinc metal dissolves into Zn²⁺ ions, causing a decrease in electrode mass."
+            },
+            {
+                q: "Which of the following is classified as a secondary (rechargeable) electrochemical cell?",
+                opts: ["Alkaline dry cell", "Zinc-carbon flashlight cell", "Lead-acid storage battery", "Hydrogen fuel cell"],
+                ans: 2,
+                exp: "Lead-acid storage batteries can be recharged by applying an external reverse current, making them secondary cells. Dry cells are primary (non-rechargeable) cells."
+            },
+            {
+                q: "During the electrolysis of molten sodium chloride (NaCl), what product forms at the cathode?",
+                opts: ["Chlorine gas (Cl₂)", "Sodium metal (Na)", "Hydrogen gas (H₂)", "Oxygen gas (O₂)"],
+                ans: 1,
+                exp: "At the cathode, reduction occurs. Na⁺ ions gain electrons to form liquid sodium metal (Na). Chlorine gas forms at the anode."
+            },
+            {
+                q: "What is the oxidation state of Sulfur (S) in the sulfate ion (SO₄²\u207B)?",
+                opts: ["+4", "+6", "-2", "+8"],
+                ans: 1,
+                exp: "Algebra: S + 4(-2) = -2 &rarr; S - 8 = -2 &rarr; S = +6."
+            },
+            {
+                q: "Which of the following properties will NOT alter standard reduction potentials (E⁰)?",
+                opts: ["Changing temperature from 25°C", "Altering electrolyte concentration from 1.0 M to 0.1 M", "Changing the physical nature of the metal", "Altering the identity of the half-reaction"],
+                ans: 1,
+                exp: "Standard potentials (E⁰) are fixed constants defined specifically at standard concentrations (1.0 M). Altering concentrations changes the cell potential (E) but not the standard potential (E⁰)."
+            },
+            {
+                q: "What is the physical meaning of Faraday's constant (F ≈ 96,485)?",
+                opts: ["The energy released by one electron", "The charge carried by one mole of electrons", "The rate of electron flow per second", "The voltage generated by a hydrogen electrode"],
+                ans: 1,
+                exp: "Faraday's constant is the total electric charge carried by exactly one mole of electrons: F = e * N_A ≈ 96,485 Coulombs/mol."
+            },
+            {
+                q: "Based on standard potentials, which of these metals is the strongest reducing agent (easiest to oxidize)?",
+                opts: ["Silver (Ag, E⁰ = +0.80 V)", "Copper (Cu, E⁰ = +0.34 V)", "Zinc (Zn, E⁰ = -0.76 V)", "Magnesium (Mg, E⁰ = -2.37 V)"],
+                ans: 3,
+                exp: "A stronger reducing agent has a lower (more negative) reduction potential, indicating it is easily oxidized. Magnesium (-2.37 V) is the easiest to oxidize."
+            },
+            {
+                q: "What is the primary reaction at the cathode during the electrolysis of pure water?",
+                opts: ["Oxidation of hydroxide ions to oxygen gas", "Reduction of water/hydrogen ions to hydrogen gas", "Reduction of oxygen molecules", "Dissolution of inert platinum wires"],
+                ans: 1,
+                exp: "At the cathode, reduction of water or H⁺ occurs: 2H₂O + 2e⁻ &rarr; H₂(g) + 2OH⁻, releasing hydrogen gas at the cathode."
+            }
+        ];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function selectQuizQuestionsForAttempt() {
+            let usedIndices = [];
+            try {
+                const stored = localStorage.getItem('usedQuizQuestions');
+                if (stored) usedIndices = JSON.parse(stored);
+            } catch (e) {
+                console.error(e);
+            }
+
+            let unusedIndices = [];
+            for (let i = 0; i < quizQuestionsPool.length; i++) {
+                if (!usedIndices.includes(i)) {
+                    unusedIndices.push(i);
+                }
+            }
+
+            // Reset history if we don't have enough unused questions
+            if (unusedIndices.length < 10) {
+                usedIndices = [];
+                localStorage.removeItem('usedQuizQuestions');
+                for (let i = 0; i < quizQuestionsPool.length; i++) {
+                    unusedIndices.push(i);
+                }
+            }
+
+            shuffleArray(unusedIndices);
+            const selectedIndices = unusedIndices.slice(0, 10);
+
+            // Save back
+            const newUsedIndices = usedIndices.concat(selectedIndices);
+            localStorage.setItem('usedQuizQuestions', JSON.stringify(newUsedIndices));
+
+            quizQuestions = selectedIndices.map(idx => quizQuestionsPool[idx]);
+        }
+
+        function startQuiz() {
+            const nameInput = document.getElementById('student-name-entry').value.trim();
+            if (!nameInput) {
+                alert("Please enter your name before starting the quiz.");
+                return;
+            }
+            playSound('click');
+            studentName = nameInput;
+            localStorage.setItem('studentName', studentName);
+            
+            quizIndex = 0;
+            quizPoints = 0;
+            
+            selectQuizQuestionsForAttempt();
+            
+            document.getElementById('quiz-start-card').style.display = 'none';
+            document.getElementById('quiz-fail-card').style.display = 'none';
+            document.getElementById('quiz-cert-card').style.display = 'none';
+            document.getElementById('quiz-active-card').style.display = 'block';
+            
+            loadQuizQuestion();
+        }
+
+        function loadQuizQuestion() {
+            document.getElementById('quiz-explanation').style.display = 'none';
+            
+            const qData = quizQuestions[quizIndex];
+            document.getElementById('quiz-current-num').innerText = quizIndex + 1;
+            document.getElementById('quiz-score-num').innerText = Math.round((quizPoints / 10) * 100);
+            
+            const barFill = document.getElementById('quiz-progress-fill');
+            barFill.style.width = `${(quizIndex / 10) * 100}%`;
+
+            document.getElementById('quiz-question-text').innerHTML = qData.q;
+            
+            const optsContainer = document.getElementById('quiz-options-container');
+            optsContainer.innerHTML = '';
+
+            qData.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => submitQuizAnswer(idx);
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        function submitQuizAnswer(selectedIdx) {
+            const qData = quizQuestions[quizIndex];
+            
+            const optionBtns = document.querySelectorAll('.quiz-option-btn');
+            optionBtns.forEach(btn => btn.removeAttribute('onclick'));
+
+            const explBox = document.getElementById('quiz-explanation');
+            const explTitle = document.getElementById('quiz-explanation-title');
+            const explText = document.getElementById('quiz-explanation-text');
+            
+            explBox.style.display = 'block';
+            explText.innerText = qData.exp;
+
+            if (selectedIdx === qData.ans) {
+                playSound('success');
+                quizPoints++;
+                explTitle.innerText = "⭐ Correct!";
+                explTitle.style.color = 'var(--color-primary)';
+                optionBtns[selectedIdx].classList.add('correct');
+            } else {
+                playSound('fail');
+                explTitle.innerText = "❌ Incorrect";
+                explTitle.style.color = 'var(--color-danger)';
+                optionBtns[selectedIdx].classList.add('incorrect');
+                optionBtns[qData.ans].classList.add('correct'); 
+            }
+        }
+
+        function nextQuizQuestion() {
+            playSound('click');
+            quizIndex++;
+            if (quizIndex < 10) {
+                loadQuizQuestion();
+            } else {
+                showQuizResults();
+            }
+        }
+
+        function showQuizResults() {
+            document.getElementById('quiz-active-card').style.display = 'none';
+            const finalScore = Math.round((quizPoints / 10) * 100);
+
+            if (finalScore > userProgress.quizHighScore) {
+                userProgress.quizHighScore = finalScore;
+            }
+            updateMasteryTracker();
+
+            if (finalScore >= 80) {
+                document.getElementById('quiz-cert-card').style.display = 'block';
+                document.getElementById('cert-score-display').innerText = `${finalScore}%`;
+                
+                let grade = 'A';
+                if (finalScore === 100) grade = 'A++';
+                else if (finalScore >= 90) grade = 'A+';
+                document.getElementById('cert-grade').innerText = grade;
+                
+                document.getElementById('cert-printed-name').innerText = studentName;
+            } else {
+                document.getElementById('quiz-fail-card').style.display = 'block';
+                document.getElementById('fail-score-display').innerText = `${finalScore}%`;
+            }
+        }
+
+        function printCertificate() {
+            playSound('click');
+            const printContent = document.getElementById('printable-certificate').innerHTML;
+            const originalBody = document.body.innerHTML;
+
+            const win = window.open('', '', 'height=600,width=800');
+            win.document.write('<html><head><title>Certificate of Mastery</title>');
+            win.document.write('<style>');
+            win.document.write(`
+                body {
+                    background: #070814;
+                    color: #fff;
+                    font-family: 'Outfit', sans-serif;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                    margin: 0;
+                }
+                .certificate-canvas-container {
+                    background: linear-gradient(135deg, #11132e, #070814);
+                    border: 8px double #00f2fe;
+                    padding: 3rem 2rem;
+                    border-radius: 16px;
+                    text-align: center;
+                    max-width: 600px;
+                    box-shadow: 0 8px 32px 0 rgba(0, 242, 254, 0.15);
+                }
+                .cert-badge {
+                    width: 70px;
+                    height: 70px;
+                    margin: 0 auto 1.5rem auto;
+                    background: radial-gradient(circle, #00f2fe 0%, #9b51e0 100%);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .cert-badge svg {
+                    width: 35px;
+                    height: 35px;
+                    fill: #fff;
+                }
+                .cert-title {
+                    font-size: 2.2rem;
+                    font-weight: 800;
+                    text-transform: uppercase;
+                    margin: 10px 0;
+                    color: #ffd700;
+                }
+                .cert-subtitle {
+                    color: #a4b0be;
+                    font-size: 0.95rem;
+                    text-transform: uppercase;
+                    margin-bottom: 2rem;
+                }
+                .cert-name {
+                    font-size: 2.5rem;
+                    font-weight: 700;
+                    color: #fff;
+                    border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+                    width: max-content;
+                    margin: 0 auto 2rem auto;
+                    padding-bottom: 8px;
+                }
+                .cert-text {
+                    color: #a4b0be;
+                    line-height: 1.6;
+                    margin-bottom: 2.5rem;
+                }
+                .cert-footer-info {
+                    display: flex;
+                    justify-content: space-around;
+                    font-size: 0.85rem;
+                    color: #a4b0be;
+                }
+                .cert-sig {
+                    font-style: italic;
+                    font-size: 1.2rem;
+                    color: #fff;
+                }
+            `);
+            win.document.write('</style></head><body>');
+            win.document.write('<div class="certificate-canvas-container">');
+            win.document.write(printContent);
+            win.document.write('</div>');
+            win.document.write('</body></html>');
+            win.document.close();
+            
+            setTimeout(() => {
+                win.print();
+            }, 500);
+        }
+
+        function resetQuiz() {
+            playSound('click');
+            document.getElementById('quiz-start-card').style.display = 'block';
+            document.getElementById('quiz-fail-card').style.display = 'none';
+            document.getElementById('quiz-cert-card').style.display = 'none';
+            document.getElementById('quiz-active-card').style.display = 'none';
+        }
+
+        window.onload = () => {
+            updateMasteryTracker();
+            // Restore name if entered previously
+            const savedName = localStorage.getItem('studentName');
+            if (savedName) {
+                const nameEntry = document.getElementById('student-name-entry');
+                if (nameEntry) nameEntry.value = savedName;
+            }
+        }
+    </script>
+</body>
+</html>
